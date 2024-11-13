@@ -13,9 +13,9 @@
         </el-header>
 
         <el-main>
-123
-
-
+            <div v-if="$hasRoles(['admin'])">User is admin</div>
+            <div v-if="$hasRoles(['admin','moderator'])">User is moderator</div>
+            <div v-if="$hasRoles(['moderator','admin'])">User is artist</div>
         </el-main>
     </el-container>
 </template>

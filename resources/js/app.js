@@ -27,8 +27,8 @@ import locale from 'element-ui/lib/locale/lang/en';
 
 Vue.component('App', require('./App.vue').default);
 
-// import Permissions from './mixins/Permissions';
-// Vue.mixin(Permissions);
+import UserRoles from './mixins/UserRoles';
+Vue.mixin(UserRoles);
 
 Vue.use(VueRouter);
 Vue.use(ElementUI, { locale });

@@ -1,21 +1,28 @@
 <template>
-  <el-container style="border: 1px solid #eee">
-    <el-aside width="240px" style="background-color: rgb(238, 241, 246)">
-        <left-menu></left-menu>
-    </el-aside>
+    <el-container>
+        <el-aside width="240px">
+            <left-menu></left-menu>
+        </el-aside>
 
-      <router-view></router-view>
-  </el-container>
+
+        <el-main>
+            <div v-if="$hasRoles(['admin'])">User is admin</div>
+            <div v-if="$hasRoles(['admin', 'moderator'])">User is moderator</div>
+            <div v-if="$hasRoles(['moderator', 'admin'])">User is artist</div>
+        </el-main>
+
+        <!-- <router-view></router-view> -->
+    </el-container>
 </template>
 
 
 <script>
 import LeftMenu from "./components/leftMenu/LeftMenu";
 export default {
-  components: {
-    LeftMenu
-  },
-  mounted() {},
+    components: {
+        LeftMenu
+    },
+    mounted() { },
 };
 </script>
 
@@ -24,14 +31,10 @@ html,
 body,
 #app,
 .el-container {
-  height: 100%;
+    height: 100%;
 }
-.el-header {
-  background-color: #b3c0d1;
-  color: #333;
-  line-height: 60px;
+.el-main {
+    padding: 0 20px;
 }
-.el-aside {
-  color: #333;
-}
+
 </style>

@@ -7,20 +7,19 @@
 
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <title>Панель управления</title>
-        {{-- <script>
+        <script>
             @auth
-              window.Permissions = {!! json_encode($permissions, true) !!};
+              window.UserRoles = {!! json_encode($userRole, true) !!};
             @else
-              window.Permissions = [];
+              window.UserRoles = [];
             @endauth
-        </script> --}}
+        </script>
 
     </head>
     <body>
         <div id="app">
             <App></App>
         </div>
-
         <script src="{{ mix('/js/app.js') }}"></script>
     </body>
 </html>

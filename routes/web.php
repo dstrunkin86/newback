@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/login', function () {
@@ -10,6 +11,7 @@ Route::get('/login', function () {
 Route::post('/auth', [AuthController::class, 'authenticate'])->name('authenticate');
 Route::middleware('auth:sanctum')->get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::middleware('auth:sanctum')->get('/admin', function () {
-    return view('admin');
-});
+Route::middleware('auth:sanctum')->get('/admin/{any_path?}', function (Request $request) {
+    $data['userRole'] = $request->user()->role;
+    return view('admin',$data);
+})->where('any_path', '(.*)')->name('admin');
