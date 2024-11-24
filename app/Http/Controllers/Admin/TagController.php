@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTagRequest;
-use App\Services\Admin\TagService;
+use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller
@@ -22,40 +22,45 @@ class TagController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(TagService $service)
+    public function index()
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->index();
+        return Tag::with(['artworks'])->get();
     }
 
     /**
      * Display a tree listing of the resource.
      */
-    public function treeIndex(TagService $service)
+    public function treeIndex()
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->treeIndex();
+
+        $tags = Tag::with(['artworks'])->get(['id','type','title'])->toArray();
+        foreach ($tags as $tag) {
+            $tag['countArtworks'] = count($tag['artworks']);
+            unset($tag['artworks']);
+            $structure[$tag['type']][] = $tag;
+        }
+        return $structure;
     }
 
     /**
      * Display a select ready listing of the resource.
      */
-    public function forSelectIndex(TagService $service)
+    public function forSelectIndex()
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        $tags = $service->index()->toArray();
+        $tags = Tag::with(['artworks'])->get()->toArray();
 
         foreach ($tags as $tag) {
             $s1[$tag['type']][] = $tag;
         }
-
-        //dd($s1);
 
         foreach ($s1 as $key=>$el1) {
             $s2 = [];
@@ -72,52 +77,50 @@ class TagController extends Controller
                 'options' => $s2
             ];
         }
-
         return $s3;
-
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTagRequest $request, TagService $service)
+    public function store(StoreTagRequest $request)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->store($request->validated());
+        return Tag::query()->create($request->validated());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id, TagService $service)
+    public function show(string $id)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->show($id);
+        return Tag::query()->find($id);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreTagRequest $request, string $id, TagService $service)
+    public function update(StoreTagRequest $request, string $id)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->update($id, $request->validated());
+        return Tag::query()->where('id', $id)->update($request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, TagService $service)
+    public function destroy(string $id)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->delete($id);
+        return Tag::query()->where('id', $id)->delete();
     }
 }

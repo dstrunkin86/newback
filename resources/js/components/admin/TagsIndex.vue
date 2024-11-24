@@ -10,7 +10,7 @@
                 <el-table :data="dataRows[tagType.value]">
                     <el-table-column prop="title.ru" label="Имя"></el-table-column>
                     <el-table-column prop="countArtworks" label="Кол-во работ"></el-table-column>
-                    <el-table-column label="Actions" width="150">
+                    <el-table-column label="Действия" width="150">
                         <template slot-scope="scope">
                             <el-button-group style="font-size: 20px">
                                 <i @click="editRow(scope.row)" class="el-icon-edit" style="color: blue"></i>
@@ -32,14 +32,8 @@
                                 :value="tagType.value" :key="tagType.value"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="Название на русском">
-                        <el-input v-model="rowObject.title.ru" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Название на китайском">
-                        <el-input v-model="rowObject.title.cn" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Название на арабском">
-                        <el-input v-model="rowObject.title.ar" autocomplete="off"></el-input>
+                    <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"  :key="lang.value">
+                        <el-input v-model="rowObject.title[lang.value]" autocomplete="off"></el-input>
                     </el-form-item>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
@@ -54,7 +48,7 @@
 </template>
 
 <script>
-import { tags } from "../../api_connectors";
+import { tags, appLangs } from "../../api_connectors";
 export default {
     name: "TagsIndex",
 
@@ -71,6 +65,7 @@ export default {
                 { value: 'color', name: 'Цвет' },
             ],
             createDialogVisible: false,
+            langs: appLangs
         };
     },
     mounted() {

@@ -15,7 +15,7 @@
                 </el-table-column>
                 <el-table-column prop="artist.year" label="Год">
                 </el-table-column>
-                <el-table-column label="Actions" width="150">
+                <el-table-column label="Действия" width="150">
                     <template slot-scope="scope">
                         <el-button-group style="font-size: 20px">
                             <i @click="editRow(scope.row, scope.$index)" class="el-icon-edit" style="color: gray"></i>
@@ -41,7 +41,7 @@
                 </el-table-column>
                 <el-table-column prop="status" label="Статус" :formatter="formatStatus">
                 </el-table-column>
-                <el-table-column label="Actions" width="150">
+                <el-table-column label="Действия" width="150">
                     <template slot-scope="scope">
                         <el-button-group style="font-size: 20px">
                             <i @click="editRow(scope.row, scope.$index)" class="el-icon-edit" style="color: blue"></i>
@@ -69,27 +69,16 @@
                     </el-form-item>
                     <el-divider></el-divider>
 
-                    <el-form-item label="Название на русском">
-                        <el-input v-model="editRowData.title.ru" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Название на китайском">
-                        <el-input v-model="editRowData.title.cn" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Название на арабском">
-                        <el-input v-model="editRowData.title.ar" autocomplete="off"></el-input>
+                    <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"  :key="'title'+lang.value">
+                        <el-input v-model="editRowData.title[lang.value]" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-divider></el-divider>
 
-                    <el-form-item label="Описание на русском">
-                        <el-input type="textarea" v-model="editRowData.description.ru" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Описание на китайском">
-                        <el-input type="textarea" v-model="editRowData.description.cn" autocomplete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="Описание на арабском">
-                        <el-input type="textarea" v-model="editRowData.description.ar" autocomplete="off"></el-input>
+                    <el-form-item v-for="lang in langs" :label="'Описание' + lang.lineEnding"  :key="'description'+lang.value">
+                        <el-input type="textarea" v-model="editRowData.description[lang.value]" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-divider></el-divider>
+
                     <el-form-item label="Год">
                         <el-input v-model="editRowData.year" autocomplete="off"></el-input>
                     </el-form-item>
@@ -157,7 +146,7 @@
 </template>
 
 <script>
-import { artworks, tags, compilations, images } from "../../api_connectors";
+import { artworks, tags, compilations, appLangs } from "../../api_connectors";
 export default {
     name: "ArtworksIndex",
     data() {
@@ -176,11 +165,11 @@ export default {
                 { value: 'technique', name: 'Техника' },
                 { value: 'color', name: 'Цвет' },
             ],
+            langs: appLangs
         };
     },
     mounted() {
         this.getData();
-
     },
     methods: {
         getData() {
@@ -300,8 +289,8 @@ export default {
             var formData = new FormData();
             formData.append("file", params.file);
 
-            images
-                .create(formData)
+            artworks
+                .addImage(this.editRowData.id,formData)
                 .then((response) => {
 
                     this.editRowData.images.push({
@@ -317,8 +306,8 @@ export default {
 
         },
         deleteImage(params) {
-            images
-                .delete(params.url)
+            artworks
+                .deleteImage(this.editRowData.id, params.id)
                 .then((response) => {
                     console.log('file delete result', response.data);
                 })

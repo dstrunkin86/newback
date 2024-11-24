@@ -13,8 +13,8 @@ class Compilation extends Model
     protected $fillable = [
         'priority',
         'title',
-        'description',
         'image',
+        'description',
         'is_published'
 
     ];

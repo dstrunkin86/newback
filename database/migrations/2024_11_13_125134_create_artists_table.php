@@ -29,9 +29,6 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('country')->default('ru');
 
-            $table->string('photo')->nullable();
-            $table->string('video')->nullable();
-
             $table->json('creative_concept')->nullable();
             $table->json('education')->nullable();
             $table->json('qualification')->nullable();

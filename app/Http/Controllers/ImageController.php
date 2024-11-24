@@ -19,8 +19,6 @@ class ImageController extends Controller
             return response()->json(['message' => 'Нет доступа'],401);
         }
 
-
-
         if ($request->file('file') != '') {
             $fileName = microtime(true). '.' . $request->file('file')->getClientOriginalExtension();
             $filePath = storage_path('app/public/images/'. $fileName);
@@ -48,11 +46,11 @@ class ImageController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator') || Auth::user()->hasRole('artist'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
+
         $file = str_replace('/storage/images/','',$request->url);
         if (file_exists(storage_path('app/public/images/'. $file))) {
             unlink(storage_path('app/public/images/'. $file));
         }
-
 
         return response()->json(['status' => 'success',200]);
     }

@@ -22,7 +22,15 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'language' => 'required|string|in:ru,en,cn,ar',
+            'title' => 'required|string',
+            'text' => 'nullable|string',
+            'image' => 'nullable|string',
+            'description' => 'nullable|string',
+            'keywords' => 'nullable|string',
+            'publication_date' => 'nullable|date_format:Y-m-d',
+            'is_published' => 'required|boolean',
+            'link' => 'string|nullable'
         ];
     }
 }

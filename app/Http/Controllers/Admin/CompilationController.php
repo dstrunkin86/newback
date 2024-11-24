@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCompilationRequest;
-use App\Services\Admin\CompilationService;
+use App\Models\Compilation;
 use Illuminate\Support\Facades\Auth;
 
 class CompilationController extends Controller
@@ -13,55 +13,55 @@ class CompilationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(CompilationService $service)
+    public function index()
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->index();
+        return Compilation::with(['artworks'])->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreCompilationRequest $request, CompilationService $service)
+    public function store(StoreCompilationRequest $request)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->store($request->validated());
+        return Compilation::query()->create($request->validated());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id, CompilationService $service)
+    public function show(string $id)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->show($id);
+        return Compilation::query()->find($id);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(StoreCompilationRequest $request, string $id, CompilationService $service)
+    public function update(StoreCompilationRequest $request, string $id)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->update($id, $request->validated());
+        return Compilation::query()->where('id', $id)->update($request->validated());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id, CompilationService $service)
+    public function destroy(string $id)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return $service->delete($id);
+        return Compilation::query()->where('id', $id)->delete();
     }
 }

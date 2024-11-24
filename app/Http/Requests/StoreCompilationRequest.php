@@ -26,6 +26,9 @@ class StoreCompilationRequest extends FormRequest
             'priority' => 'required|integer',
             'title' => 'required|array',
             'description' => 'required|array',
+            'is_published' => 'required|boolean',
+            'image' => 'nullable|string'
+
         ];
     }
 }

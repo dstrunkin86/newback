@@ -38,7 +38,7 @@
                 </el-table-column>
                 <el-table-column prop="role" label="Роль" :formatter="formatRole">
                 </el-table-column>
-                <el-table-column label="Actions" width="150">
+                <el-table-column label="Действия" width="150">
                     <template slot-scope="scope">
                         <el-button-group style="font-size: 20px">
                             <i @click="editRow(scope.$index)" class="el-icon-edit" style="color: blue"></i>

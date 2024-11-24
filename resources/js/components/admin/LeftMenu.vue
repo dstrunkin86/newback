@@ -1,11 +1,7 @@
 <template>
     <div class="cont">
         <el-menu>
-        <router-link v-if="$hasRoles(['admin','moderator'])" tag="el-menu-item" to="/admin/">
-            <i class="el-icon-menu"></i>
-            <span>Главная</span>
-        </router-link>
-        <router-link v-if="$hasRoles(['admin','moderator'])" tag="el-menu-item" to="/admin/artists">
+        <router-link v-if="$hasRoles(['admin','moderator'])" tag="el-menu-item" to="/admin">
             <i class="el-icon-edit"></i>
             <span>Художники</span>
         </router-link>

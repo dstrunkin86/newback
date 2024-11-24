@@ -15,11 +15,12 @@ return new class extends Migration
             $table->id();
 
             $table->enum('language',['ru','en','ar','cn'])->default('ru');
-            $table->text('text');
+            $table->string('title');
+            $table->text('text')->nullable();
             $table->string('description')->nullable();
             $table->string('keywords')->nullable();
             $table->string('image')->nullable();
-            $table->timestamp('publication_date');
+            $table->timestamp('publication_date')->nullable();
             $table->boolean('is_published')->default(false);
             $table->string('link')->nullable();
 

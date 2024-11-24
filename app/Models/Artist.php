@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Filters\Filter;
+use App\Traits\HasImages;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Artist extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, HasImages;
 
     protected $fillable = [
         'source',
@@ -25,8 +26,6 @@ class Artist extends Model
         'phone',
         'city',
         'country',
-        'photo',
-        'video',
         'creative_concept',
         'education',
         'qualification',
