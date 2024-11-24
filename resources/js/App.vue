@@ -3,26 +3,19 @@
         <el-aside width="240px">
             <left-menu></left-menu>
         </el-aside>
-
-
-        <el-main>
-            <div v-if="$hasRoles(['admin'])">User is admin</div>
-            <div v-if="$hasRoles(['admin', 'moderator'])">User is moderator</div>
-            <div v-if="$hasRoles(['moderator', 'admin'])">User is artist</div>
-        </el-main>
-
-        <!-- <router-view></router-view> -->
+        <router-view></router-view>
     </el-container>
 </template>
 
 
 <script>
-import LeftMenu from "./components/leftMenu/LeftMenu";
+import LeftMenu from "./components/admin/LeftMenu";
 export default {
     components: {
         LeftMenu
     },
-    mounted() { },
+    mounted() {
+    },
 };
 </script>
 
@@ -33,8 +26,21 @@ body,
 .el-container {
     height: 100%;
 }
-.el-main {
-    padding: 0 20px;
+.panel-header {
+    font-size: 24px;
+    margin-bottom:20px;
+}
+.panel-subheader {
+    font-size: 18px;
+    margin:20px 0px;
+    border-bottom: 1px solid #000;
+}
+.panel-subheader i {
+    float:right;
+}
+
+.filter .el-form-item {
+    margin-bottom: 0px;
 }
 
 </style>

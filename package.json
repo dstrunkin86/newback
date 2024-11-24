@@ -25,6 +25,7 @@
     },
     "dependencies": {
         "element-ui": "^2.15.6",
+        "vue-cookies": "^1.8.4",
         "vue-router": "^3.5.3"
     }
 }
