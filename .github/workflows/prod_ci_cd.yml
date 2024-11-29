@@ -27,7 +27,7 @@ jobs:
 
             mkdir -p /etc/nginx/snippets/new.arthall/
             cp .deploy/prod/nginx/snippets/new.arthall/* /etc/nginx/snippets/new.arthall/
-            cp .deploy/master/nginx/new.arthall.online.conf /etc/nginx/conf.d/new.arthall.online.conf
+            cp .deploy/prod/nginx/new.arthall.online.conf /etc/nginx/conf.d/new.arthall.online.conf
 
 
             yes | composer install
