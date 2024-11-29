@@ -23,7 +23,7 @@ jobs:
             cd /var/www/arthall/arthall.newback
             git fetch --all
             git reset --hard origin/master
-            cp .deploy/prod/.env /var/www/arthall/arthall.newback.env
+            cp .deploy/prod/.env /var/www/arthall/arthall.newback/.env
             yes | composer install
             php artisan key:generate
             php artisan migrate --force
