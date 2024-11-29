@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
 
             $table->enum('status',['new','accepted','rejected'])->default('new');
+            $table->text('status_comment')->nullable();
+
             $table->index('status');
 
             $table->json('title');
             $table->json('description');
-            $table->smallInteger('year');
+            $table->smallInteger('year')->nullable();
             $table->string('location')->nullable();
 
             $table->foreignId('artist_id')->index();
@@ -29,8 +31,8 @@ return new class extends Migration
             $table->float('depth')->nullable();
             $table->float('weight')->nullable();
 
-            $table->boolean('in_sale');
-            $table->float('price');
+            $table->boolean('in_sale')->default(false);
+            $table->float('price')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

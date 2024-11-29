@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-
+use App\Filters\TagFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTagRequest;
 use App\Models\Tag;
@@ -51,12 +51,14 @@ class TagController extends Controller
     /**
      * Display a select ready listing of the resource.
      */
-    public function forSelectIndex()
+    public function forSelectIndex(TagFilter $filter)
     {
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        $tags = Tag::with(['artworks'])->get()->toArray();
+
+        $tags = Tag::filter($filter)->get();
+
 
         foreach ($tags as $tag) {
             $s1[$tag['type']][] = $tag;

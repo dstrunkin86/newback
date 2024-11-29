@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Filters\Admin\ArtistFilter;
+use App\Filters\ArtistFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArtistRequest;
 use App\Http\Requests\StoreImageRequest;
@@ -19,7 +19,7 @@ class ArtistController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Artist::with(['artworks','user'])->filter($filter)->get();
+        return Artist::with(['artworks','user','tags:id,type,title'])->filter($filter)->get();
     }
 
     /**
@@ -30,7 +30,17 @@ class ArtistController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Artist::create($request->validated());
+
+        $data = $request->validated();
+        $tags = [];
+        if (isset($data['tags'])) {
+            $tags = $data['tags'];
+            unset($data['tags']);
+        }
+        $artist = Artist::create($request->validated());
+        if (count($tags)>0) $artist->tags()->sync($tags);
+
+        return $artist;
     }
 
 
@@ -82,7 +92,14 @@ class ArtistController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Artist::where('id', $id)->update($request->validated());
+        $data = $request->validated();
+        $artist = Artist::with(['tags'])->find($id);
+        if (isset($data['tags'])) {
+            $artist->tags()->sync($data['tags']);
+            unset($data['tags']);
+        }
+
+        return $artist->update($data);
     }
 
     /**

@@ -27,7 +27,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
 
             $table->string('city')->nullable();
-            $table->string('country')->default('ru');
+            $table->string('country',2)->default('ru');
 
             $table->json('creative_concept')->nullable();
             $table->json('education')->nullable();
@@ -36,6 +36,9 @@ return new class extends Migration
             $table->json('publications')->nullable();
 
             $table->foreignId('user_id')->index()->nullable();
+
+            $table->json('tech_info')->nullable();
+            $table->unsignedBigInteger('external_id')->nullable();
 
             $table->softDeletes();
             $table->timestamps();

@@ -23,7 +23,22 @@ class StoreArtistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'source' => 'required|string',
+            'status' => 'required|string',
+            'fio' => 'required|array',
+            // временно для совместимости со старым артхоллом  'email' => 'required|email',
+            'email' => 'required|string',
+            'vk' => 'required|string',
+            'telegram' => 'required|string',
+            'phone' => 'required|string',
+            'city' => 'required|string',
+            'country' => 'required|string',
+            'external_id' => 'nullable|integer',
+            'tags' => 'nullable|array',
+            'education' => 'nullable|array',
+            'qualification' => 'nullable|array',
+            'exhibitions' => 'nullable|array',
+            'publications' => 'nullable|array',
         ];
     }
 }

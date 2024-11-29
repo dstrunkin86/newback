@@ -143,7 +143,8 @@ export const tags = {
         return axios.get(host_path + urls.tags + "/tree", { params });
     },
     forSelect: (filter = {}) => {
-        return axios.get(host_path + urls.tags + "/for-select");
+        const params = new URLSearchParams(filter);
+        return axios.get(host_path + urls.tags + "/for-select", { params });
     },
     list: (filter = {}) => {
         const params = new URLSearchParams(filter);

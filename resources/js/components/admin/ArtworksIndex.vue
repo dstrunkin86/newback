@@ -133,6 +133,9 @@
                             <el-option label="Отклонена" value="rejected"></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="Комментарий к статусу">
+                        <el-input type="textarea" v-model="editRowData.status_comment" autocomplete="off"></el-input>
+                    </el-form-item>
                 </el-form>
 
                 <span slot="footer" class="dialog-footer">
@@ -157,14 +160,6 @@ export default {
             editDialogVisible: false,
             tags: [],
             compilations: [],
-            tagTypes: [
-                { value: 'style', name: 'Стиль' },
-                { value: 'material', name: 'Материал' },
-                { value: 'theme', name: 'Тема' },
-                { value: 'genre', name: 'Жанр' },
-                { value: 'technique', name: 'Техника' },
-                { value: 'color', name: 'Цвет' },
-            ],
             langs: appLangs
         };
     },
@@ -173,6 +168,7 @@ export default {
     },
     methods: {
         getData() {
+            this.$loading();
 
             let promises = [];
             promises.push(artworks.list({ 'status_in': ['new'] }));
@@ -187,8 +183,9 @@ export default {
                     console.log('incoming', this.dataRows);
                     this.tags = response[2].data;
                     this.compilations = response[3].data;
-
+                    this.$loading().close();
                 }).catch((error) => {
+                    this.$loading().close();
                     this.$message({
                         message: "Не удалось загрузить данные: " + error,
                         type: "error",

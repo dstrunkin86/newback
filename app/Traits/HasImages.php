@@ -16,6 +16,7 @@ trait HasImages
 
     public function updateImages($files)
     {
+        //dd($files);
         Image::where([
             ['model_type', get_class($this)],
             ['model_id', $this->id]
@@ -29,6 +30,7 @@ trait HasImages
                 'width' => (isset($file['width'])) ? $file['width'] : null,
                 'height' => (isset($file['height'])) ? $file['height'] : null,
             ];
+            //dd($file_params);
             Image::create($file_params);
         }
     }

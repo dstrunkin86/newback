@@ -7,6 +7,7 @@ use App\Traits\HasImages;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -30,12 +31,19 @@ class Artist extends Model
         'education',
         'qualification',
         'exhibitions',
-        'publications'
-
+        'publications',
+        'tech_info',
+        'external_id',
     ];
 
     protected $casts = [
-        'fio' => 'object'
+        'fio' => 'object',
+        'creative_concept' => 'object',
+        'education' => 'object',
+        'qualification' => 'object',
+        'exhibitions' => 'object',
+        'publications' => 'object',
+        'tech_info' => 'object',
     ];
 
     public function scopeFilter(Builder $builder, Filter $filter): Builder
@@ -49,6 +57,14 @@ class Artist extends Model
     public function artworks(): HasMany
     {
         return $this->hasMany(Artwork::class);
+    }
+
+    /**
+     * List of the artwork tags.
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class);
     }
 
     /**

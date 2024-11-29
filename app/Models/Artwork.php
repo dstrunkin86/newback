@@ -19,6 +19,7 @@ class Artwork extends Model
 
     protected $fillable = [
         'status',
+        'status_comment',
         'title',
         'description',
         'year',

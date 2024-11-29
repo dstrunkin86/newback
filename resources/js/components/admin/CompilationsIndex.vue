@@ -58,7 +58,7 @@
                             </el-carousel-item>
                         </el-carousel>
                     </el-form-item>
-                    <el-divider></el-divider>
+                    <el-divider v-if="editRowData.artworks.length > 0"></el-divider>
 
                     <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"  :key="'title'+lang.value">
                         <el-input v-model="editRowData.title[lang.value]" autocomplete="off"></el-input>
