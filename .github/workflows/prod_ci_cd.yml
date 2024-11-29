@@ -36,5 +36,5 @@ jobs:
           to: "-1001704333037"
           token: 5219393533:AAHPlGYKhMEMeEx7Ho0MFsyH5i8VXtX6los
           message: |
-            ${{ github.actor }} выкатил новый релиз на https://arthall.online - ${{github.event.head_commit.message}}
+            ${{ github.actor }} выкатил новый релиз на https://new.dev.arthall.online - ${{github.event.head_commit.message}}
 
