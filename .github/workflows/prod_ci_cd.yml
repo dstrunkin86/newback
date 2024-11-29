@@ -1,0 +1,39 @@
+name: Update server
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Copy Repo Files
+        uses: actions/checkout@master
+
+      - name: Update static file on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: new.dev.arthall.online
+          username: root
+          port: 65321
+          key: ${{ secrets.DEV_SSH_KEY }}
+          script: |
+            cd /var/www/arthall/arthall.newback
+            git fetch --all
+            git reset --hard origin/master
+            cp .deploy/prod/.env /var/www/arthall/arthall.newback.env
+            yes | composer install
+            php artisan key:generate
+            php artisan migrate --force
+            chmod 777 -R storage/app
+            npm i
+            npm run dev
+      - name: Release notification
+        uses: appleboy/telegram-action@master
+        with:
+          to: "-1001704333037"
+          token: 1264749466:AAFjYWJqVIli7LJ2oadWw_yQq1nN_UbZQ8o
+          message: |
+            ${{ github.actor }} обновил new.dev.arthall.online - ${{github.event.head_commit.message}}
