@@ -25,6 +25,7 @@ class StoreArtistRequest extends FormRequest
         return [
             'source' => 'required|string',
             'status' => 'required|string',
+            'status_comment' => 'nullable|string',
             'fio' => 'required|array',
             // временно для совместимости со старым артхоллом  'email' => 'required|email',
             'email' => 'required|string',

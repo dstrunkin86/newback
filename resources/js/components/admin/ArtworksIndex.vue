@@ -2,12 +2,14 @@
     <el-container>
         <el-main>
             <div class="panel-header">Работы</div>
-            <div v-if="newDataRows.length > 0" class="panel-subheader">Требуют обработки</div>
-            <el-table v-if="newDataRows.length > 0" :data="newDataRows" stripe>
+            <div v-if="(typeof newDataRows.data !== 'undefined')&&(newDataRows.data.length > 0)" class="panel-subheader">Требуют обработки</div>
+            <el-table v-if="(typeof newDataRows.data !== 'undefined')&&(newDataRows.data.length > 0)" :data="newDataRows.data" stripe>
                 <el-table-column prop="image" label="Изображение">
                     <template slot-scope="scope">
                         <el-image style="width: 150px; height: 150px" :src="scope.row.images[0].url" fit="cover"></el-image>
                     </template>
+                </el-table-column>
+                <el-table-column prop="id" label="ID" width="50">
                 </el-table-column>
                 <el-table-column prop="title.ru" label="Название">
                 </el-table-column>
@@ -28,12 +30,17 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="panel-subheader">Картины в галерее</div>
-            <el-table :data="dataRows" stripe>
+            <el-pagination layout="pager" :current-page="newDataRows.current_page" :total="newDataRows.total" :page-size="newDataRows.per_page" @current-change="newDataRowsPageChanged"> </el-pagination>
+
+
+            <div v-if="(typeof dataRows.data !== 'undefined')&&(dataRows.data.length > 0)" class="panel-subheader">Картины в галерее</div>
+            <el-table v-if="(typeof dataRows.data !== 'undefined')&&(dataRows.data.length > 0)" :data="dataRows.data" stripe>
                 <el-table-column prop="image" label="Изображение">
                     <template slot-scope="scope">
                         <el-image style="width: 150px; height: 150px" :src="(scope.row.images.length > 0) ? scope.row.images[0].url:''" fit="cover"></el-image>
                     </template>
+                </el-table-column>
+                <el-table-column prop="id" label="ID" width="50">
                 </el-table-column>
                 <el-table-column prop="title.ru" label="Название">
                 </el-table-column>
@@ -53,6 +60,9 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-pagination layout="pager" :current-page="dataRows.current_page" :total="dataRows.total" :page-size="dataRows.per_page" @current-change="dataRowsPageChanged"> </el-pagination>
+
+
 
             <el-dialog v-if="editRowData != null"
                 :title="((editRowData != null) && (editRowData.id > 0)) ? 'Редактирование' : 'Создание'"
@@ -155,7 +165,9 @@ export default {
     data() {
         return {
             dataRows: [],
+            dataRowsPage: 1,
             newDataRows: [],
+            newDataRowsPage: 1,
             editRowData: null,
             editDialogVisible: false,
             tags: [],
@@ -193,6 +205,42 @@ export default {
                         showClose: true,
                     });
                 });
+        },
+        newDataRowsPageChanged(page) {
+            this.$loading();
+            this.newDataRowsPage = page;
+            artworks.
+                list({ 'status_in': ['new'] }, this.newDataRowsPage)
+                    .then((response) => {
+                        this.newDataRows = response.data;
+                        this.$loading().close();
+                    }).catch((error) => {
+                        this.$loading().close();
+                        this.$message({
+                            message: "Не удалось загрузить данные: " + error,
+                            type: "error",
+                            duration: 5000,
+                            showClose: true,
+                        });
+                    });
+        },
+        dataRowsPageChanged(page) {
+            this.$loading();
+            this.dataRowsPage = page;
+            artworks.
+                list({ 'status_in': ['accepted', 'rejected'] }, this.dataRowsPage)
+                    .then((response) => {
+                        this.dataRows = response.data;
+                        this.$loading().close();
+                    }).catch((error) => {
+                        this.$loading().close();
+                        this.$message({
+                            message: "Не удалось загрузить данные: " + error,
+                            type: "error",
+                            duration: 5000,
+                            showClose: true,
+                        });
+                    });
         },
         editRow(data, index) {
             //console.log('inFunction',data);

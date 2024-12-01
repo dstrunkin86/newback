@@ -19,7 +19,8 @@ class ArtistController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Artist::with(['artworks','user','tags:id,type,title'])->filter($filter)->get();
+        // return Artist::with(['artworks','user','tags:id,type,title'])->filter($filter)->get();
+        return Artist::with(['artworks','user','tags:id,type,title'])->filter($filter)->paginate(20);
     }
 
     /**

@@ -32,8 +32,11 @@ class importOldArthallArtists extends Command
 
         $transferredArtists = Artist::where('source', 'old_arthall')->pluck('external_id')->toArray();
 
+        $this->line('Import artists from old Arthall');
+
 
         $old_artists = OldArtist::with(['paintings'])->whereNotIn('id', $transferredArtists)->get()->toArray();
+        $this->line(count($old_artists).' artists will be transferred');
 
         $resultArray = [];
 
@@ -53,8 +56,8 @@ class importOldArthallArtists extends Command
                 'city' => '-',
                 'country' => ($artist['country']) ? mb_strtoupper($artist['country']) : '-',
                 'creative_concept' => [
-                    'ru' => $artist['about_ru'],
-                    'en' => $artist['about_en']
+                    'ru' => strip_tags($artist['about_ru']),
+                    'en' => strip_tags($artist['about_en'])
                 ],
                 'tech_info' => [
                     'facebook' => $artist['facebook'],
@@ -89,8 +92,8 @@ class importOldArthallArtists extends Command
                                 'en' => $painting['title_en'],
                             ],
                             'description' => [
-                                'ru' => $painting['additional_info_ru'],
-                                'en' => $painting['additional_info_en'],
+                                'ru' => strip_tags($painting['additional_info_ru']),
+                                'en' => strip_tags($painting['additional_info_en']),
                             ],
                             'year' => $painting['sale_year'],
                             'location' => $painting['sale_location_ru'],
@@ -129,6 +132,6 @@ class importOldArthallArtists extends Command
             }
         }
 
-        //dd($resultArray);
+        $this->line('Transfer complete');
     }
 }

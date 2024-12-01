@@ -63,9 +63,9 @@ export const users = {
 };
 
 export const artists = {
-    list: (filter = {}) => {
+    list: (filter = {}, page = 1) => {
         const params = new URLSearchParams(filter);
-        return axios.get(host_path + urls.artists, { params });
+        return axios.get(host_path + urls.artists + '/?page=' + page, { params });
     },
     show: (id) => {
         return axios.get(host_path + urls.artists + "/" + id);
@@ -88,9 +88,9 @@ export const artists = {
 };
 
 export const artworks = {
-    list: (filter = {}) => {
+    list: (filter = {}, page = 1) => {
         const params = new URLSearchParams(filter);
-        return axios.get(host_path + urls.artworks, { params });
+        return axios.get(host_path + urls.artworks + '/?page=' + page, { params });
     },
     show: (id) => {
         return axios.get(host_path + urls.artworks + "/" + id);
