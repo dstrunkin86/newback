@@ -17,7 +17,7 @@ class ArtistObserver
      */
     public function created(Artist $artist): void
     {
-        $message = 'Создан новый художник! Источник: '.$artist->source.', имя: '.$artist->name;
+        $message = 'Создан новый художник! Источник: '.$artist->source.', имя: '.$artist->fio->ru;
         $this->sendTelegram($message);
     }
 
