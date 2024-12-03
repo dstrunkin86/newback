@@ -42,6 +42,8 @@ Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
 // для старого фронта и приложения
 Route::prefix('/v3')->group(function () {
     Route::post('/user', [Users::class, 'store']);
-
+    Route::middleware('auth:sanctum')->group(function() {
+        Route::patch('/user', [Users::class, 'update']);
+    });
 });
 

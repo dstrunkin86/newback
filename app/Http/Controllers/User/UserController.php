@@ -31,8 +31,17 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(StoreUserRequest $request)
     {
-        //
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json(['error' => 'The provided credentials are incorrect.'], 422);
+        }
+
+        $user->fill($request->validated());
+        $user->save();
+
+        return response()->json(['user'=> $user], 200);
     }
 }
