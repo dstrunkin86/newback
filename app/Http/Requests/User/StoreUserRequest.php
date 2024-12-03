@@ -25,7 +25,7 @@ class StoreUserRequest extends FormRequest
             'name' => 'nullable|string|max:50',
             'email' => 'nullable|email|max:255',
             'lang' => 'nullable|string|max:10',
-            'device_name' => 'required|string|max:25',
+            'device_name' => 'sometimes|string|max:25',
             'fcm_token' => 'nullable|string'
         ];
     }
