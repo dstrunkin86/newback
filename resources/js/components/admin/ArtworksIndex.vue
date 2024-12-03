@@ -269,7 +269,7 @@ export default {
             artworks
                 .delete(id)
                 .then((response) => {
-                    this[varName].splice(position, 1);
+                    this[varName].data.splice(position, 1);
                     this.$loading().close();
                     this.$message({
                         message: "Успешное удаление!",

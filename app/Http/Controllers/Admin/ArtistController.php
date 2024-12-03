@@ -94,6 +94,7 @@ class ArtistController extends Controller
             return response()->json(['message' => 'Нет доступа'],401);
         }
         $data = $request->validated();
+        //dd($data);
         $artist = Artist::with(['tags'])->find($id);
         if (isset($data['tags'])) {
             $artist->tags()->sync($data['tags']);

@@ -28,7 +28,7 @@ class StorePostRequest extends FormRequest
             'image' => 'nullable|string',
             'description' => 'nullable|string',
             'keywords' => 'nullable|string',
-            'publication_date' => 'nullable|date_format:Y-m-d',
+            'publication_date' => 'nullable|date_format:Y-m-d h:i:s',
             'is_published' => 'required|boolean',
             'link' => 'string|nullable'
         ];

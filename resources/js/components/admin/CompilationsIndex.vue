@@ -51,14 +51,15 @@
                     </el-form-item>
                     <el-divider></el-divider>
 
-                    <el-form-item label="Работы в подборке" v-if="editRowData.artworks.length > 0">
+                    <el-form-item label="Работы в подборке" v-if="(typeof editRowData.artworks !== 'undefined')&&(editRowData.artworks.length > 0)">
                         <el-carousel :interval="5000" type="card" height="200px">
+
                             <el-carousel-item v-for="item in editRowData.artworks" :key="item.id">
                                 <el-image style="height: 100%; width:100%" :src="item.images[0].url"></el-image>
                             </el-carousel-item>
                         </el-carousel>
                     </el-form-item>
-                    <el-divider v-if="editRowData.artworks.length > 0"></el-divider>
+                    <el-divider v-if="(typeof editRowData.artworks !== 'undefined')&&(editRowData.artworks.length > 0)"></el-divider>
 
                     <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"  :key="'title'+lang.value">
                         <el-input v-model="editRowData.title[lang.value]" autocomplete="off"></el-input>

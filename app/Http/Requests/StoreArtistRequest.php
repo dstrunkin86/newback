@@ -38,6 +38,7 @@ class StoreArtistRequest extends FormRequest
             'tags' => 'nullable|array',
             'education' => 'nullable|array',
             'qualification' => 'nullable|array',
+            'creative_concept' => 'nullable|array',
             'exhibitions' => 'nullable|array',
             'publications' => 'nullable|array',
         ];
