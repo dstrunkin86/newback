@@ -70,6 +70,6 @@ class UserController extends Controller
         if (!(Auth::user()->hasRole('admin'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return User::query()->where('id', $id)->delete();
+        return User::findOrFail($id)->delete();
     }
 }

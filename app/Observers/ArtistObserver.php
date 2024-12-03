@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Artist;
+use App\Models\Artwork;
 use Illuminate\Support\Facades\Http;
 
 class ArtistObserver
@@ -17,8 +18,8 @@ class ArtistObserver
      */
     public function created(Artist $artist): void
     {
-        $message = 'Создан новый художник! Источник: '.$artist->source.', имя: '.$artist->fio->ru;
-        $this->sendTelegram($message);
+        // $message = 'Создан новый художник! Источник: '.$artist->source.', имя: '.$artist->fio->ru;
+        // $this->sendTelegram($message);
     }
 
     /**
@@ -26,11 +27,11 @@ class ArtistObserver
      */
     public function updated(Artist $artist): void
     {
-        $changes = $artist->getDirty();
-        if (isset($changes['status'])) {
-            $message = 'Изменился статус художника! Имя: '.$artist->fio->ru.', источник: '.$artist->source.' новый статус: '.$changes['status'].'. Комментарий к статусу: '.$artist->status_comment;
-            $result = $this->sendTelegram($message);
-        }
+        // $changes = $artist->getDirty();
+        // if (isset($changes['status'])) {
+        //     $message = 'Изменился статус художника! Имя: '.$artist->fio->ru.', источник: '.$artist->source.' новый статус: '.$changes['status'].'. Комментарий к статусу: '.$artist->status_comment;
+        //     $result = $this->sendTelegram($message);
+        // }
 
     }
 
@@ -39,7 +40,13 @@ class ArtistObserver
      */
     public function deleted(Artist $artist): void
     {
-        //
+        //dd('delete',$artist);
+        $artworks = $artist->artworks;
+        foreach ($artworks as $artwork) {
+            $artwork->delete();
+        }
+        $artist->tags()->detach();
+        $artist->user()->delete();
     }
 
     /**

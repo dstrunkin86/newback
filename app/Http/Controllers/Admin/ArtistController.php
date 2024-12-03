@@ -112,6 +112,6 @@ class ArtistController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Artist::where('id',$id)->delete();
+        return Artist::findOrFail($id)->delete();
     }
 }

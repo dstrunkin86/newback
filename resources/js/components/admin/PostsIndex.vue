@@ -164,6 +164,7 @@ export default {
                 publication_date: null,
                 is_published: 0,
                 link: '',
+                image: ''
             };
             this.editDialogVisible = true;
         },

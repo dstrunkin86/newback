@@ -94,6 +94,6 @@ class PostController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Post::query()->where('id', $id)->delete();
+        return Post::findOrFail($id)->delete();
     }
 }

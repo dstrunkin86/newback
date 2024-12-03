@@ -26,7 +26,7 @@ class StoreArtworkRequest extends FormRequest
             'title' => 'required|array',
             'description' => 'required|array',
             'year' => 'nullable|integer',
-            'location' => 'required|string',
+            'location' => 'nullable|string',
             'artist_id' => 'required|integer',
             'width' => 'nullable|integer',
             'height' => 'nullable|integer',

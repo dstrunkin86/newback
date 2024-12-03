@@ -81,7 +81,7 @@ class importSynergyArtists extends Command
         $synergyUrl = env('SYNERGY_URL');
 
 
-        $transferredArtists = Artist::where('source', 'synergy')->pluck('external_id')->toArray();
+        $transferredArtists = Artist::withTrashed()->where('source', 'synergy')->pluck('external_id')->toArray();
         $this->line('Import artists from Synergy');
 
 

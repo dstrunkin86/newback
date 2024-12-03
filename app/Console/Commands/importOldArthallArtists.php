@@ -30,7 +30,7 @@ class importOldArthallArtists extends Command
     {
         $oldArthallPath = env('OLD_ARTHALL_PATH');
 
-        $transferredArtists = Artist::where('source', 'old_arthall')->pluck('external_id')->toArray();
+        $transferredArtists = Artist::withTrashed()->where('source', 'old_arthall')->pluck('external_id')->toArray();
 
         $this->line('Import artists from old Arthall');
 

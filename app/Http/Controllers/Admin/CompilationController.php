@@ -62,6 +62,6 @@ class CompilationController extends Controller
         if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
             return response()->json(['message' => 'Нет доступа'],401);
         }
-        return Compilation::query()->where('id', $id)->delete();
+        return Compilation::findOrFail($id)->delete();
     }
 }

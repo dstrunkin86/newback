@@ -37,7 +37,8 @@ class ArtworkObserver
      */
     public function deleted(Artwork $artwork): void
     {
-        //
+        $artwork->tags()->detach();
+        $artwork->compilations()->detach();
     }
 
     /**
