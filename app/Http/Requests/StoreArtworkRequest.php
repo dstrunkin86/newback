@@ -35,7 +35,7 @@ class StoreArtworkRequest extends FormRequest
             'status' => 'required|string|in:new,accepted,rejected',
             'status_comment' => 'nullable|string',
             'in_sale' => 'required|boolean',
-            'price' => 'nullable|float',
+            'price' => 'nullable|integer',
             'tags' => 'sometimes|array',
             'compilations' => 'sometimes|array',
             'images' => 'sometimes|array',
