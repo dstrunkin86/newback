@@ -7,6 +7,8 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\Admin\PostController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
+
+use App\Http\Controllers\User\UserController as Users;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,4 +39,9 @@ Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
     Route::post('/general/delete-image', [ImageController::class, 'destroy']);
 });
 
+// для старого фронта и приложения
+Route::prefix('/v3')->group(function () {
+    Route::post('/user', [Users::class, 'store']);
+
+});
 
