@@ -37,10 +37,10 @@ const urls = {
     artworks: "/api/admin/artworks",
     compilations: "/api/admin/compilations",
     tags: "/api/admin/tags",
-    general: "/api/admin/general",
+
     posts: "/api/admin/posts",
 
-
+    general: "/api/general",
 };
 
 export const users = {

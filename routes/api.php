@@ -10,8 +10,12 @@ use App\Http\Controllers\Admin\UserController;
 
 use App\Http\Controllers\User\UserController as Users;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OldArthallHooksController;
 
-
+Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
+    Route::post('/store-image', [ImageController::class, 'store']);
+    Route::post('/delete-image', [ImageController::class, 'destroy']);
+});
 
 Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
     Route::post('/artists/{id}/add-image', [ArtistController::class, 'addImage']);
@@ -35,15 +39,38 @@ Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
 
     Route::resource('/users', UserController::class);
 
-    Route::post('/general/store-image', [ImageController::class, 'store']);
-    Route::post('/general/delete-image', [ImageController::class, 'destroy']);
 });
 
 // для старого фронта и приложения
 Route::prefix('/v3')->group(function () {
-    Route::post('/user', [Users::class, 'store']);
+
+    Route::post('/user', [OldArthallHooksController::class, 'registerUser']);
+
     Route::middleware('auth:sanctum')->group(function() {
-        Route::patch('/user', [Users::class, 'update']);
+        Route::get('/user/settings', [OldArthallHooksController::class, 'userSEttings']);
+        Route::patch('/user', [OldArthallHooksController::class, 'updateUser']);
+
+        Route::get('/app/mobile-lang/{id}', [OldArthallHooksController::class, 'mobileLang']);
+
+        Route::get('/notifications/list', [OldArthallHooksController::class, 'emptyArray']);
+
+        Route::get('/paintings/in-sale', [OldArthallHooksController::class, 'emptyArray']);
+        Route::get('/paintings/list', [OldArthallHooksController::class, 'artworksList']);
+        Route::get('/paintings/web-list-synergy', [OldArthallHooksController::class, 'emptyArray']);
+
+        Route::get('/paintings/{id}/share', [OldArthallHooksController::class, 'returnSuccess']);
+        Route::post('/paintings/{id}/set-viewed', [OldArthallHooksController::class, 'setArtworkViewed']);
+        Route::patch('/paintings/{id}/set-rate', [OldArthallHooksController::class, 'setArtworkRate']);
+        Route::get('/paintings/{id}', [OldArthallHooksController::class, 'artworkDetail']);
+
+        Route::get('/artists/favourites', [OldArthallHooksController::class, 'emptyArray']);
+        Route::get('/artists/list', [OldArthallHooksController::class, 'artistsList']);
+        Route::post('/artists/{id}/attitude', [OldArthallHooksController::class, 'artistAttitude']);
+        Route::post('/artists/{id}/share', [OldArthallHooksController::class, 'returnSuccess']);
+        Route::get('/artists/{id}', [OldArthallHooksController::class, 'artistDetail']);
+
+        Route::get('galleries/own', [OldArthallHooksController::class, 'ownGalleries']);
+
     });
 });
 

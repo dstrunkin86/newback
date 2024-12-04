@@ -1,4 +1,5 @@
 <?php
+#TODO удалить после переезда на новый Arthall
 
 namespace App\Models\OldArthall;
 
