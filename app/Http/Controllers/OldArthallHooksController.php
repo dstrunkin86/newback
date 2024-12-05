@@ -36,6 +36,66 @@ class OldArthallHooksController extends Controller
         }
     }
 
+    public function desktopLang(Request $request)
+    {
+        $desktopLang['ru'] = [
+            "language" => "Язык",
+            "title" => "ArtHall - лента работ современных художников",
+            "mainTitle" => "Лента работ современных художников",
+            "contactTitle" => "Хотите добавить Ваши работы в ArtHall?",
+            "contactAbout" => "Расскажите о себе",
+            "name" => "Ваше имя",
+            "about" => "Коротко о Вас",
+            "email" => "Email",
+            "singUp" => "Регистрация",
+            "singIn" => "Уже регистрировались? Войдите здесь",
+            "oferta" => "Авторское соглашение",
+            "byClicking" => "Нажимая 'Регистрация' вы принимаете условия Соглашения",
+            "gallery" => "Галерея",
+            "manifest" => "Манифест",
+            "subscribe" => "Подписаться",
+            "loading" => "Загрузка",
+            "modalMessage" => "Установите приложение ArtHall, чтобы использовать все функции",
+            "sendAccess" => "Форма успешно отправлена!",
+            "willContact" => "Мы свяжемся с Вами в ближайшее время",
+            "painting_links" => "Ссылки на Ваши работы",
+            "installApp" => "Установите приложение ArtHall",
+            "artistsTitle" => "Художники в галерее"
+        ];
+        $desktopLang['en'] = [
+            "language" => "Language",
+            "title" => "ArtHall - modern artists' paintings feed",
+            "mainTitle" => "Modern artists' paintings feed",
+            "contactTitle" => "Want to add your paintings to ArtHall?",
+            "contactAbout" => "Tell us about yourself",
+            "name" => "Your name",
+            "about" => "Briefly about you",
+            "email" => "Email",
+            "singUp" => "Sing up",
+            "singIn" => "Already Registered? Login here",
+            "oferta" => "Copyright agreement",
+            "byClicking" => "By clicking the 'Register' button, you accept the terms",
+            "gallery" => "Gallery",
+            "manifest" => "Manifest",
+            "subscribe" => "Subscribe",
+            "loading" => "Loading",
+            "modalMessage" => "Install ArtHall app to gain access to all features",
+            "sendAccess" => "Form sent successfully!",
+            "willContact" => "We will contact you shortly",
+            "painting_links" => "Links to your paintings",
+            "installApp" => "Download an ArtHall app",
+            "artistsTitle" => "Artists in the gallery"
+        ];
+
+        //echo $request->id; die();
+
+        if (isset($desktopLang[$request->id])) {
+            return response()->json($desktopLang[$request->id], 200);
+        } else {
+            return response()->json(['result' => 'Error', 'message' => 'No such language'], 403);
+        }
+    }
+
     public function registerUser(Request $request)
     {
         $request->validate([

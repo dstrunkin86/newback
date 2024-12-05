@@ -47,12 +47,19 @@ Route::prefix('/v3')->group(function () {
     Route::post('/user', [OldArthallHooksController::class, 'registerUser']);
 
     Route::middleware('auth:sanctum')->group(function() {
-        Route::get('/user/settings', [OldArthallHooksController::class, 'userSEttings']);
+        Route::get('/user/settings', [OldArthallHooksController::class, 'userSettings']);
         Route::patch('/user', [OldArthallHooksController::class, 'updateUser']);
 
         Route::get('/app/mobile-lang/{id}', [OldArthallHooksController::class, 'mobileLang']);
+        Route::get('/app/desktop-lang/{id}', [OldArthallHooksController::class, 'desktopLang']);
+        Route::get('/app/business-links', [OldArthallHooksController::class, 'emptyArray']);
+        Route::get('/app/news', [OldArthallHooksController::class, 'emptyArray']);
 
         Route::get('/notifications/list', [OldArthallHooksController::class, 'emptyArray']);
+
+        Route::get('/stories/list', [OldArthallHooksController::class, 'emptyArray']);
+
+        Route::get('/articles/list', [OldArthallHooksController::class, 'emptyArray']);
 
         Route::get('/paintings/in-sale', [OldArthallHooksController::class, 'emptyArray']);
         Route::get('/paintings/list', [OldArthallHooksController::class, 'artworksList']);
