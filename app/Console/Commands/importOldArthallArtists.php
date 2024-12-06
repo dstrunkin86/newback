@@ -44,7 +44,7 @@ class importOldArthallArtists extends Command
             $artistData = [
                 'external_id' => $artist['id'],
                 'source' => 'old_arthall',
-                'status' => 'new',
+                'status' => (($artist['published'] == 'yes')&&($artist['url'])) ? 'accepted':'new',
                 'fio' => [
                     "ru" => $artist['name_ru'],
                     "en" => $artist['name_en'],
@@ -52,6 +52,7 @@ class importOldArthallArtists extends Command
                 'email' => ($artist['email']) ? $artist['email'] : '-',
                 'phone' => ($artist['phone']) ? $artist['phone'] : '-',
                 'vk' => '-',
+                'url' => $artist['url'],
                 'telegram' => '-',
                 'city' => '-',
                 'country' => ($artist['country']) ? mb_strtoupper($artist['country']) : '-',
@@ -99,7 +100,7 @@ class importOldArthallArtists extends Command
                             'location' => $painting['sale_location_ru'],
                             'width' => $painting['width'],
                             'height' => $painting['height'],
-                            'status' => 'new',
+                            'status' => (($artist['published'] == 'yes')&&($artist['url'])) ? 'accepted':'new',
                             'in_sale' => 0,
                             'images' => [
                                 [

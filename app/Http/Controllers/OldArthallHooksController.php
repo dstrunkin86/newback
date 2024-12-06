@@ -10,6 +10,12 @@ use Illuminate\Http\Request;
 
 class OldArthallHooksController extends Controller
 {
+    private function trans($string) {
+        $string = transliterator_transliterate("Any-Latin; NFD; [:Nonspacing Mark:] Remove; NFC; [:Punctuation:] Remove; Lower();", $string);
+        $string = preg_replace('/[-\s]+/', '-', $string);
+        return trim($string, '-');
+    }
+
     public function emptyArray()
     {
         return [];
@@ -289,14 +295,14 @@ class OldArthallHooksController extends Controller
 
     public function artistsList(Request $request)
     {
-        $artists = Artist::with(['artworks'])->where('status', 'accepted')->inRandomOrder()->limit(20)->get();
+        $artists = Artist::with(['artworks'])->where('status', 'accepted')->whereNotNull('url')->inRandomOrder()->get();
         $result = [];
         foreach ($artists as $artist) {
             $result[] = [
                 "id" => $artist->id,
                 "name_en" => isset($artist->fio->en) ? $artist->fio->en : '',
                 "name_ru" => isset($artist->fio->ru) ? $artist->fio->ru : '',
-                "url" => null,
+                "url" => isset($artist->url) ? $artist->url : '',
                 "photo" =>  isset($artist->images[0]['url']) ? url($artist->images[0]['url']) : '',
                 "country" => (!in_array($artist->country, [null, '-'])) ? "https://arthall.online/storage/flags/" . mb_strtolower($artist->country) . ".svg" : "",
                 "merch_sale_agree" => 0
@@ -308,7 +314,9 @@ class OldArthallHooksController extends Controller
     public function artistDetail(Request $request, $id)
     {
 
-        $artist = Artist::with(['artworks'])->where('status', 'accepted')->findOrFail($id);
+        $artist = Artist::with(['artworks'])->where('status', 'accepted')->where('url',$id)->first();
+
+        if (!$artist) $artist = Artist::with(['artworks'])->where('status', 'accepted')->findOrFail($id);
 
         $result = [
             "id" =>  $artist->id,

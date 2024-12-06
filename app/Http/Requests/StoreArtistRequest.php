@@ -27,6 +27,8 @@ class StoreArtistRequest extends FormRequest
             'status' => 'required|string',
             'status_comment' => 'nullable|string',
             'fio' => 'required|array',
+            'url' => 'required_if:status,accepted',
+            #TODO: убрать коммент ниже при переходе на новый артхолл
             // временно для совместимости со старым артхоллом  'email' => 'required|email',
             'email' => 'required|string',
             'vk' => 'required|string',

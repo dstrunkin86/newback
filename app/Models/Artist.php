@@ -23,6 +23,7 @@ class Artist extends Model
         'status',
         'status_comment',
         'fio',
+        'url',
         'alias',
         'email',
         'vk',

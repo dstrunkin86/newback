@@ -45,6 +45,11 @@ Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
 Route::prefix('/v3')->group(function () {
 
     Route::post('/user', [OldArthallHooksController::class, 'registerUser']);
+    Route::get('/paintings/web-list', [OldArthallHooksController::class, 'artworksList']);
+    Route::get('/artists/list', [OldArthallHooksController::class, 'artistsList']);
+    Route::get('/artists/top', [OldArthallHooksController::class, 'emptyArray']);
+    Route::get('/paintings/top', [OldArthallHooksController::class, 'emptyArray']);
+    Route::get('/app/news', [OldArthallHooksController::class, 'emptyArray']);
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::get('/user/settings', [OldArthallHooksController::class, 'userSettings']);
@@ -53,7 +58,7 @@ Route::prefix('/v3')->group(function () {
         Route::get('/app/mobile-lang/{id}', [OldArthallHooksController::class, 'mobileLang']);
         Route::get('/app/desktop-lang/{id}', [OldArthallHooksController::class, 'desktopLang']);
         Route::get('/app/business-links', [OldArthallHooksController::class, 'emptyArray']);
-        Route::get('/app/news', [OldArthallHooksController::class, 'emptyArray']);
+
 
         Route::get('/notifications/list', [OldArthallHooksController::class, 'emptyArray']);
 
@@ -71,7 +76,6 @@ Route::prefix('/v3')->group(function () {
         Route::get('/paintings/{id}', [OldArthallHooksController::class, 'artworkDetail']);
 
         Route::get('/artists/favourites', [OldArthallHooksController::class, 'emptyArray']);
-        Route::get('/artists/list', [OldArthallHooksController::class, 'artistsList']);
         Route::post('/artists/{id}/attitude', [OldArthallHooksController::class, 'artistAttitude']);
         Route::post('/artists/{id}/share', [OldArthallHooksController::class, 'returnSuccess']);
         Route::get('/artists/{id}', [OldArthallHooksController::class, 'artistDetail']);
