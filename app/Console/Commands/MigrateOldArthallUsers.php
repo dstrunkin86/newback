@@ -30,8 +30,10 @@ class MigrateOldArthallUsers extends Command
      */
     public function handle()
     {
+        $num_tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2023-01-01')->count();
+        $this->line($num_tokens  . ' users to be created');
         $tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2023-01-01')->chunk(10000, function ($tokens) {
-            $this->line(count($tokens) . ' users to be created');
+
             foreach ($tokens as $token) {
                 //DB::connection('mysql_old_arthall')->enableQueryLog();
                 $user = OldArthallUser::find($token->tokenable_id);
