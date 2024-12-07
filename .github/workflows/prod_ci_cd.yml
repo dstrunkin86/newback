@@ -44,7 +44,7 @@ jobs:
             php artisan config:cache
             php artisan route:cache
 
-            npm run dev
+            npm run prod
       - name: Release notification
         uses: appleboy/telegram-action@master
         with:
