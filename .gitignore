@@ -23,3 +23,5 @@ yarn-error.log
 /public/js/app.js
 rr
 .rr.yaml
+public/admin/js/app.js
+public/admin/css/app.css
