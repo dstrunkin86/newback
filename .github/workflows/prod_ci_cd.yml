@@ -30,6 +30,10 @@ jobs:
             cp .deploy/prod/nginx/new.arthall.online.conf /etc/nginx/conf.d/new.arthall.online.conf
             service nginx reload
 
+            cp .deploy/prod/supervisor/new-arthall.octane-worker.ini /etc/supervisor/conf.d/new-arthall.octane-worker.conf
+            cp .deploy/prod/supervisor/new-arthall.queue-worker.ini /etc/supervisor/conf.d/new-arthall.queue-worker.conf
+            service supervisor restart
+
             yes | composer install
             npm i
 
