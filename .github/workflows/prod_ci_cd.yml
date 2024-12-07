@@ -15,10 +15,10 @@ jobs:
       - name: Update static file on server
         uses: appleboy/ssh-action@master
         with:
-          host: new.dev.arthall.online
+          host: new.arthall.online
           username: root
           port: 65321
-          key: ${{ secrets.DEV_SSH_KEY }}
+          key: ${{ secrets.PROD_SSH_KEY }}
           script: |
             cd /var/www/arthall/arthall.newback
             git fetch --all
@@ -51,5 +51,5 @@ jobs:
           to: "-1001704333037"
           token: 5219393533:AAHPlGYKhMEMeEx7Ho0MFsyH5i8VXtX6los
           message: |
-            ${{ github.actor }} выкатил новый релиз на https://new.dev.arthall.online - ${{github.event.head_commit.message}}
+            ${{ github.actor }} выкатил новый релиз на https://new.arthall.online - ${{github.event.head_commit.message}}
 
