@@ -2,7 +2,7 @@ name: Update server
 
 on:
   push:
-    branches: [ master ]
+    branches: [ dev ]
 
 jobs:
 
@@ -22,22 +22,22 @@ jobs:
           script: |
             cd /var/www/arthall/arthall.newback
             git fetch --all
-            git reset --hard origin/master
+            git reset --hard origin/dev
             chmod 777 -R storage
 
             mkdir -p /etc/nginx/snippets/new.arthall/
-            cp .deploy/prod/nginx/snippets/new.arthall/* /etc/nginx/snippets/new.arthall/
-            cp .deploy/prod/nginx/new.arthall.online.conf /etc/nginx/conf.d/new.arthall.online.conf
+            cp .deploy/dev/nginx/snippets/new.arthall/* /etc/nginx/snippets/new.arthall/
+            cp .deploy/dev/nginx/new.arthall.online.conf /etc/nginx/conf.d/new.arthall.online.conf
             service nginx reload
 
-            cp .deploy/prod/supervisor/new-arthall.octane-worker.ini /etc/supervisor/conf.d/new-arthall.octane-worker.conf
-            cp .deploy/prod/supervisor/new-arthall.queue-worker.ini /etc/supervisor/conf.d/new-arthall.queue-worker.conf
+            cp .deploy/dev/supervisor/new-arthall.octane-worker.ini /etc/supervisor/conf.d/new-arthall.octane-worker.conf
+            cp .deploy/dev/supervisor/new-arthall.queue-worker.ini /etc/supervisor/conf.d/new-arthall.queue-worker.conf
             service supervisor restart
 
             yes | composer install
             npm i
 
-            cp .deploy/prod/.env /var/www/arthall/arthall.newback/.env
+            cp .deploy/dev/.env /var/www/arthall/arthall.newback/.env
             php artisan key:generate
             php artisan migrate --force
             php artisan config:clear
