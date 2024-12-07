@@ -78,7 +78,6 @@ class importSynergyArtists extends Command
     public function handle()
     {
         $synergyPath = env('SYNERGY_PATH');
-        $synergyUrl = env('SYNERGY_URL');
 
 
         $transferredArtists = Artist::withTrashed()->where('source', 'synergy')->pluck('external_id')->toArray();
@@ -140,7 +139,7 @@ class importSynergyArtists extends Command
             if ((isset($artist['user']['artist_works'])) && (count($artist['user']['artist_works']) > 0)) {
                 foreach ($artist['user']['artist_works'] as $painting) {
                     if (isset($painting['image'])) {
-                        $fileName = str_replace($synergyUrl . '/storage/images/', '', $painting['image']['url']);
+                        $fileName = str_replace('/storage/images/', '', $painting['image']['url']);
 
                         if (file_exists($synergyPath . '/storage/images/' . $fileName)) {
 
