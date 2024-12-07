@@ -27,7 +27,7 @@
         </router-link>
 
         <div class="el-menu-item"></div>
-        <a href="/logout">
+        <a href="/admin/logout">
             <el-menu-item>
                 <i class="el-icon-top-left"></i>
                 <span>Выход</span>
