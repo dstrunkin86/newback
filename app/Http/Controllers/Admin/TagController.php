@@ -60,11 +60,12 @@ class TagController extends Controller
 
         $tags = Tag::filter($filter)->get();
 
-
+        $s1 = [];
         foreach ($tags as $tag) {
             $s1[$tag['type']][] = $tag;
         }
 
+        $s3 = [];
         foreach ($s1 as $key=>$el1) {
             $s2 = [];
 
