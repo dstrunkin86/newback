@@ -40,8 +40,6 @@ jobs:
             cp .deploy/dev/.env /var/www/arthall/arthall.newback/.env
             php artisan key:generate
             php artisan migrate --force
-            php artisan config:clear
-            php artisan config:cache
             php artisan route:cache
 
             npm run dev
