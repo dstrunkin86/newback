@@ -40,6 +40,7 @@ class TagController extends Controller
         }
 
         $tags = Tag::with(['artworks'])->get(['id','type','title'])->toArray();
+        $structure = [];
         foreach ($tags as $tag) {
             $tag['countArtworks'] = count($tag['artworks']);
             unset($tag['artworks']);
