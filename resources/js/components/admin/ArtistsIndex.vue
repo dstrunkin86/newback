@@ -27,7 +27,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination layout="pager" :current-page="newDataRows.current_page" :total="newDataRows.total" :page-size="newDataRows.per_page" @current-change="newDataRowsPageChanged"> </el-pagination>
+            <el-pagination v-if="(typeof newDataRows.data !== 'undefined')&&(newDataRows.data.length > 0)" layout="pager" :current-page="newDataRows.current_page" :total="newDataRows.total" :page-size="newDataRows.per_page" @current-change="newDataRowsPageChanged"> </el-pagination>
 
 
 
@@ -55,7 +55,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination layout="pager" :current-page="dataRows.current_page" :total="dataRows.total" :page-size="dataRows.per_page" @current-change="dataRowsPageChanged"> </el-pagination>
+            <el-pagination v-if="(typeof dataRows.data !== 'undefined')&&(dataRows.data.length > 0)" layout="pager" :current-page="dataRows.current_page" :total="dataRows.total" :page-size="dataRows.per_page" @current-change="dataRowsPageChanged"> </el-pagination>
 
 
 
