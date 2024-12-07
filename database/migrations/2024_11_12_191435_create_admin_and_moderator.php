@@ -18,6 +18,11 @@ return new class extends Migration
             'email' => 'dstrunkin@gmail.com',
             'password' => Hash::make('22061941')
         ]);
+        User::create([
+            'name' => 'moderator',
+            'email' => 'moderator@arthall.online',
+            'password' => Hash::make('22061941')
+        ]);
     }
 
     /**
@@ -26,5 +31,6 @@ return new class extends Migration
     public function down(): void
     {
         $user = User::where('name','admin')->delete();
+        $user = User::where('name','moderator')->delete();
     }
 };

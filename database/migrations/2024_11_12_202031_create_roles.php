@@ -30,6 +30,10 @@ return new class extends Migration
         $user = User::where('name','admin')->first();
 
         $user->assignRole('admin');
+
+        $user = User::where('name','moderator')->first();
+
+        $user->assignRole('moderator');
     }
 
     /**
@@ -42,6 +46,10 @@ return new class extends Migration
         $user = User::where('name','admin')->first();
 
         $user->removeRole('admin');
+
+        $user = User::where('name','moderator')->first();
+
+        $user->removeRole('moderator');
 
         foreach (self::ROLES as $role) {
             $found = Role::findByName($role);
