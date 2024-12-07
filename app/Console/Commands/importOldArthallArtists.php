@@ -43,7 +43,7 @@ class importOldArthallArtists extends Command
         foreach ($old_artists as $artist) {
             $artistData = [
                 'external_id' => $artist['id'],
-                'source' => 'old_arthall',
+                'source' => (!$artist['in_sandbox']) ? 'old_arthall' : 'arthall_sandbox',
                 'status' => (($artist['published'] == 'yes')&&($artist['url'])) ? 'accepted':'new',
                 'fio' => [
                     "ru" => $artist['name_ru'],

@@ -496,6 +496,7 @@ export default {
                 ['arthall', 'ArtHall'],
                 ['synergy', 'Synergy'],
                 ['old_arthall', 'Старый ArtHall'],
+                ['arthall_sandbox', 'Песочница ArtHall'],
             ]);
 
             return arr.get(cellValue);

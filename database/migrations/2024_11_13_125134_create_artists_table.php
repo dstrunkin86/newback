@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
 
-            $table->enum('source',['arthall','synergy','old_arthall'])->default('arthall');
+            $table->enum('source',['arthall','synergy','old_arthall','arthall_sandbox'])->default('arthall');
             $table->enum('status',['new','accepted','rejected'])->default('new');
             $table->text('status_comment')->nullable();
 
