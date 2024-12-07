@@ -25,3 +25,5 @@ rr
 .rr.yaml
 public/admin/js/app.js
 public/admin/css/app.css
+public/admin-resources/css/app.css
+public/admin-resources/js/app.js

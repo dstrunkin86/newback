@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <link rel="stylesheet" href="/admin/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/admin-resources/css/bootstrap.min.css">
         <title>Панель управления</title>
         <script>
             @auth
@@ -19,6 +19,6 @@
         <div id="app">
             <App></App>
         </div>
-        <script src="{{ mix('/admin/js/app.js') }}"></script>
+        <script src="{{ mix('/admin-resources/js/app.js') }}"></script>
     </body>
 </html>
