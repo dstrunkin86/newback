@@ -32,7 +32,7 @@ class MigrateOldArthallUsers extends Command
     {
         $num_tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2024-01-01')->count();
         $this->line($num_tokens  . ' users to be created');
-        $tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2024-01-01')->orderBy('id','desc');
+        $tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2024-01-01')->orderBy('id','desc')->get();
         $i = 0;
         foreach ($tokens as $token) {
             $user = OldArthallUser::find($token->tokenable_id);
