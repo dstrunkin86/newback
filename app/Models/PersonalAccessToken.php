@@ -23,6 +23,7 @@ class PersonalAccessToken extends Model
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'token',
         'abilities',
