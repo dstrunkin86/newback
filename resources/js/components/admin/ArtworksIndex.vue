@@ -2,11 +2,14 @@
     <el-container>
         <el-main>
             <div class="panel-header">Работы</div>
-            <div v-if="(typeof newDataRows.data !== 'undefined')&&(newDataRows.data.length > 0)" class="panel-subheader">Требуют обработки</div>
-            <el-table v-if="(typeof newDataRows.data !== 'undefined')&&(newDataRows.data.length > 0)" :data="newDataRows.data" stripe>
+            <div v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
+                class="panel-subheader">Требуют обработки</div>
+            <el-table v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
+                :data="newDataRows.data" stripe>
                 <el-table-column prop="image" label="Изображение">
                     <template slot-scope="scope">
-                        <el-image style="width: 150px; height: 150px" :src="scope.row.images[0].url" fit="cover"></el-image>
+                        <el-image style="width: 150px; height: 150px" :src="scope.row.images[0].url"
+                            fit="cover"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="id" label="ID" width="50">
@@ -30,14 +33,20 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination v-if="(typeof newDataRows.data !== 'undefined')&&(newDataRows.data.length > 0)" layout="pager" :current-page="newDataRows.current_page" :total="newDataRows.total" :page-size="newDataRows.per_page" @current-change="newDataRowsPageChanged"> </el-pagination>
+            <el-pagination v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
+                layout="pager" :current-page="newDataRows.current_page" :total="newDataRows.total"
+                :page-size="newDataRows.per_page" @current-change="newDataRowsPageChanged"> </el-pagination>
 
 
-            <div v-if="(typeof dataRows.data !== 'undefined')&&(dataRows.data.length > 0)" class="panel-subheader">Картины в галерее</div>
-            <el-table v-if="(typeof dataRows.data !== 'undefined')&&(dataRows.data.length > 0)" :data="dataRows.data" stripe>
+            <div v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" class="panel-subheader">
+                Картины в галерее
+            </div>
+            <el-table v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" :data="dataRows.data"
+                stripe>
                 <el-table-column prop="image" label="Изображение">
                     <template slot-scope="scope">
-                        <el-image style="width: 150px; height: 150px" :src="(scope.row.images.length > 0) ? scope.row.images[0].url:''" fit="cover"></el-image>
+                        <el-image style="width: 150px; height: 150px"
+                            :src="(scope.row.images.length > 0) ? scope.row.images[0].url : ''" fit="cover"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="id" label="ID" width="50">
@@ -60,14 +69,16 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination v-if="(typeof dataRows.data !== 'undefined')&&(dataRows.data.length > 0)" layout="pager" :current-page="dataRows.current_page" :total="dataRows.total" :page-size="dataRows.per_page" @current-change="dataRowsPageChanged"> </el-pagination>
+            <el-pagination v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" layout="pager"
+                :current-page="dataRows.current_page" :total="dataRows.total" :page-size="dataRows.per_page"
+                @current-change="dataRowsPageChanged"> </el-pagination>
 
 
 
             <el-dialog v-if="editRowData != null"
                 :title="((editRowData != null) && (editRowData.id > 0)) ? 'Редактирование' : 'Создание'"
                 :visible.sync="editDialogVisible">
-                <el-form :model="editRowData" label-width="200px" size="mini">
+                <el-form :model="editRowData" ref="editRowData" label-width="200px" size="mini">
                     <el-form-item label="Изображения">
                         <el-upload action="" list-type="picture-card" :fileList="editRowData.images"
                             :http-request="uploadImage" :on-remove="deleteImage">
@@ -79,22 +90,23 @@
                     </el-form-item>
                     <el-divider></el-divider>
 
-                    <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"  :key="'title'+lang.value">
+                    <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"
+                        :key="'title' + lang.value" :rules="requiredRule">
                         <el-input v-model="editRowData.title[lang.value]" autocomplete="off"></el-input>
                     </el-form-item>
                     <el-divider></el-divider>
 
-                    <el-form-item v-for="lang in langs" :label="'Описание' + lang.lineEnding"  :key="'description'+lang.value">
-                        <el-input type="textarea" v-model="editRowData.description[lang.value]" autocomplete="off"></el-input>
+                    <el-form-item v-for="lang in langs" :label="'Описание' + lang.lineEnding"
+                        :key="'description' + lang.value" :rules="requiredRule">
+                        <el-input type="textarea" v-model="editRowData.description[lang.value]"
+                            autocomplete="off"></el-input>
                     </el-form-item>
                     <el-divider></el-divider>
 
                     <el-form-item label="Год">
                         <el-input v-model="editRowData.year" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="Местоположение">
-                        <el-input v-model="editRowData.location" autocomplete="off"></el-input>
-                    </el-form-item>
+
                     <el-divider></el-divider>
                     <el-form-item label="Высота (см.)">
                         <el-input v-model="editRowData.height" autocomplete="off"></el-input>
@@ -115,8 +127,18 @@
                             <el-radio-button label="0">Нет</el-radio-button>
                         </el-radio-group>
                     </el-form-item>
-                    <el-form-item label="Цена (руб.)" v-if="editRowData.in_sale > 0">
+                    <el-form-item label="Цена (руб.)" v-if="editRowData.in_sale > 0" :rules="requiredRule">
                         <el-input v-model="editRowData.price" autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="Местоположение" :rules="(editRowData.in_sale == 1) ? requiredRule : null">
+                        <!-- <el-input v-model="editRowData.location" autocomplete="off"></el-input> -->
+                        <el-select v-model="editRowData.location" filterable remote reserve-keyword
+                            placeholder="Начните вводить название" :remote-method="getDadataCities"
+                            :loading="addressLoading">
+                            <el-option v-for="item in citiesList" :key="item.fias" :label="item.name"
+                                :value="item.name">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-divider></el-divider>
                     <el-form-item label="Тэги">
@@ -159,7 +181,7 @@
 </template>
 
 <script>
-import { artworks, tags, compilations, appLangs } from "../../api_connectors";
+import { artworks, tags, compilations, appLangs, dadata } from "../../api_connectors";
 export default {
     name: "ArtworksIndex",
     data() {
@@ -172,7 +194,15 @@ export default {
             editDialogVisible: false,
             tags: [],
             compilations: [],
-            langs: appLangs
+            langs: appLangs,
+            requiredRule: [
+                { required: true, message: 'Заполните это поле', trigger: 'blur' },
+            ],
+
+
+            addressLoading: false,
+            citiesList: [],
+
         };
     },
     mounted() {
@@ -199,7 +229,7 @@ export default {
                 }).catch((error) => {
                     this.$loading().close();
                     this.$message({
-                        message: "Не удалось загрузить данные: " + error,
+                        message: "Не удалось загрузить данные: " + error.response.data.message,
                         type: "error",
                         duration: 5000,
                         showClose: true,
@@ -211,36 +241,36 @@ export default {
             this.newDataRowsPage = page;
             artworks.
                 list({ 'status_in': ['new'] }, this.newDataRowsPage)
-                    .then((response) => {
-                        this.newDataRows = response.data;
-                        this.$loading().close();
-                    }).catch((error) => {
-                        this.$loading().close();
-                        this.$message({
-                            message: "Не удалось загрузить данные: " + error,
-                            type: "error",
-                            duration: 5000,
-                            showClose: true,
-                        });
+                .then((response) => {
+                    this.newDataRows = response.data;
+                    this.$loading().close();
+                }).catch((error) => {
+                    this.$loading().close();
+                    this.$message({
+                        message: "Не удалось загрузить данные: " + error.response.data.message,
+                        type: "error",
+                        duration: 5000,
+                        showClose: true,
                     });
+                });
         },
         dataRowsPageChanged(page) {
             this.$loading();
             this.dataRowsPage = page;
             artworks.
                 list({ 'status_in': ['accepted', 'rejected'] }, this.dataRowsPage)
-                    .then((response) => {
-                        this.dataRows = response.data;
-                        this.$loading().close();
-                    }).catch((error) => {
-                        this.$loading().close();
-                        this.$message({
-                            message: "Не удалось загрузить данные: " + error,
-                            type: "error",
-                            duration: 5000,
-                            showClose: true,
-                        });
+                .then((response) => {
+                    this.dataRows = response.data;
+                    this.$loading().close();
+                }).catch((error) => {
+                    this.$loading().close();
+                    this.$message({
+                        message: "Не удалось загрузить данные: " + error.response.data.message,
+                        type: "error",
+                        duration: 5000,
+                        showClose: true,
                     });
+                });
         },
         editRow(data, index) {
             //console.log('inFunction',data);
@@ -264,6 +294,36 @@ export default {
             this.editRowData = null;
             this.editDialogVisible = false;
         },
+        getDadataCities(query) {
+            console.log('query',query);
+
+            if ((query !== '') && (query.length > 3)) {
+                this.addressLoading = true;
+
+                dadata.address(query)
+                    .then((response) => {
+                        console.log('response', response);
+
+                        this.citiesList = response.data.suggestions.map(item => {
+                            return { fias: item.data.city_fias_id, name: item.data.city };
+                        });
+
+                        this.addressLoading = false;
+                        console.log('this.citiesList',this.citiesList);
+                    })
+                    .catch((error) => {
+                        this.$message({
+                            message: "Не удалось получить адреса: " + error.response.data.message,
+                            type: "error",
+                            duration: 5000,
+                            showClose: true,
+                        });
+                        this.addressLoading = false;
+                    });
+            } else {
+                this.citiesList = [];
+            }
+        },
         deleteRow(id, position, varName = 'dataRows') {
             this.$loading();
             artworks
@@ -281,7 +341,7 @@ export default {
                 .catch((error) => {
                     this.$loading().close();
                     this.$message({
-                        message: "Не удалось удалить: " + error,
+                        message: "Не удалось удалить: " + error.response.data.message,
                         type: "error",
                         duration: 5000,
                         showClose: true,
@@ -289,36 +349,44 @@ export default {
                 });
         },
         saveRow() {
-            this.$loading();
-            let result =
-                this.editRowData.id > 0
-                    ? artworks.update(
-                        this.editRowData.id,
-                        this.editRowData
-                    )
-                    : artworks.create(this.editRowData);
-            result
-                .then((response) => {
-                    this.$loading().close();
-                    this.$message({
-                        message: "Успешное сохранение!",
-                        type: "success",
-                        duration: 3000,
-                        showClose: true,
-                    });
-                    this.getData();
-                    this.editRowData = null;
-                    this.editDialogVisible = false;
-                })
-                .catch((error) => {
-                    this.$loading().close();
-                    this.$message({
-                        message: "Не удалось сохранить данные: " + error,
-                        type: "error",
-                        duration: 5000,
-                        showClose: true,
-                    });
-                });
+            this.$refs['editRowData'].validate((valid) => {
+                if (valid) {
+                    console.log('form valid');
+                    this.$loading();
+                    let result =
+                        this.editRowData.id > 0
+                            ? artworks.update(
+                                this.editRowData.id,
+                                this.editRowData
+                            )
+                            : artworks.create(this.editRowData);
+                    result
+                        .then((response) => {
+                            this.$loading().close();
+                            this.$message({
+                                message: "Успешное сохранение!",
+                                type: "success",
+                                duration: 3000,
+                                showClose: true,
+                            });
+                            this.getData();
+                            this.editRowData = null;
+                            this.editDialogVisible = false;
+                        })
+                        .catch((error) => {
+                            this.$loading().close();
+                            this.$message({
+                                message: "Не удалось сохранить данные: " + error.response.data.message,
+                                type: "error",
+                                duration: 5000,
+                                showClose: true,
+                            });
+                        });
+                } else {
+                    console.log('error submit!!');
+                    return false;
+                }
+            });
         },
         formatStatus(row, column, cellValue, index) {
             var arr = new Map([
@@ -335,14 +403,14 @@ export default {
             formData.append("file", params.file);
 
             artworks
-                .addImage(this.editRowData.id,formData)
+                .addImage(this.editRowData.id, formData)
                 .then((response) => {
 
                     this.editRowData.images.push({
                         url: response.data.url,
                         status: "success"
                     });
-                    console.log('current images',this.editRowData.images);
+                    console.log('current images', this.editRowData.images);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -362,7 +430,7 @@ export default {
             this.editRowData.images = this.editRowData.images.filter(function (obj) {
                 return obj.url !== params.url;
             });
-            console.log('current images',this.editRowData.images);
+            console.log('current images', this.editRowData.images);
         },
 
     },

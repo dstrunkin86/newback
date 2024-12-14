@@ -1,43 +1,59 @@
 <?php
-
-use App\Http\Controllers\Admin\ArtistController;
-use App\Http\Controllers\Admin\ArtworkController;
-use App\Http\Controllers\Admin\CompilationController;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\Admin\PostController;
-use App\Http\Controllers\Admin\TagController;
-use App\Http\Controllers\Admin\UserController;
-
-use App\Http\Controllers\User\UserController as Users;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OldArthallHooksController;
 
+use App\Http\Controllers\ImageController as GeneralImageController;
+use App\Http\Controllers\Admin\ArtistController as AdminArtistController;
+use App\Http\Controllers\Admin\ArtworkController as AdminArtworkController;
+use App\Http\Controllers\Admin\CompilationController as AdminCompilationController;
+use App\Http\Controllers\Admin\PostController as AdminPostController;
+use App\Http\Controllers\Admin\TagController as AdminTagController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
+
+use App\Http\Controllers\Front\ArtistController as FrontArtistController;
+use App\Http\Controllers\Front\ArtworkController as FrontArtworkController;
+use App\Http\Controllers\Front\SettingsController as FrontSettingsController;
+
+
+// общие методы для админки и ЛК художников
 Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
-    Route::post('/store-image', [ImageController::class, 'store']);
-    Route::post('/delete-image', [ImageController::class, 'destroy']);
+    Route::post('/store-image', [GeneralImageController::class, 'store']);
+    Route::post('/delete-image', [GeneralImageController::class, 'destroy']);
 });
 
+// методы для фронтов
+Route::get('/artists', [FrontArtistController::class, 'index']);
+Route::get('/artists/{id}', [FrontArtistController::class, 'show']);
+
+Route::get('/artworks', [FrontArtworkController::class, 'index']);
+Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
+
+Route::get('/settings/tags-tree', [FrontSettingsController::class, 'tagsTree']);
+Route::get('/settings/available-artist-cities', [FrontSettingsController::class, 'artistCities']);
+Route::get('/settings/available-artwork-cities', [FrontSettingsController::class, 'artworkCities']);
+
+//админка
 Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
-    Route::post('/artists/{id}/add-image', [ArtistController::class, 'addImage']);
-    Route::delete('/artists/{artistId}/delete-image/{imageId}', [ArtistController::class, 'deleteImage']);
-    Route::resource('/artists', ArtistController::class);
+    Route::post('/artists/{id}/add-image', [AdminArtistController::class, 'addImage']);
+    Route::delete('/artists/{artistId}/delete-image/{imageId}', [AdminArtistController::class, 'deleteImage']);
+    Route::resource('/artists', AdminArtistController::class);
 
-    Route::post('/artworks/{id}/add-image', [ArtworkController::class, 'addImage']);
-    Route::delete('/artworks/{artworkId}/delete-image/{imageId}', [ArtworkController::class, 'deleteImage']);
-    Route::resource('/artworks', ArtworkController::class);
+    Route::post('/artworks/{id}/add-image', [AdminArtworkController::class, 'addImage']);
+    Route::delete('/artworks/{artworkId}/delete-image/{imageId}', [AdminArtworkController::class, 'deleteImage']);
+    Route::resource('/artworks', AdminArtworkController::class);
 
-    Route::resource('/compilations', CompilationController::class);
+    Route::resource('/compilations', AdminCompilationController::class);
 
-    Route::post('/posts/{id}/add-image', [PostController::class, 'addImage']);
-    Route::delete('/posts/{postId}/delete-image/{imageId}', [PostController::class, 'deleteImage']);
-    Route::resource('/posts', PostController::class);
+    Route::post('/posts/{id}/add-image', [AdminPostController::class, 'addImage']);
+    Route::delete('/posts/{postId}/delete-image/{imageId}', [AdminPostController::class, 'deleteImage']);
+    Route::resource('/posts', AdminPostController::class);
 
 
-    Route::get('/tags/tree', [TagController::class, 'treeIndex']);
-    Route::get('/tags/for-select', [TagController::class, 'forSelectIndex']);
-    Route::resource('/tags', TagController::class);
+    Route::get('/tags/tree', [AdminTagController::class, 'treeIndex']);
+    Route::get('/tags/for-select', [AdminTagController::class, 'forSelectIndex']);
+    Route::resource('/tags', AdminTagController::class);
 
-    Route::resource('/users', UserController::class);
+    Route::resource('/users', AdminUserController::class);
 
 });
 

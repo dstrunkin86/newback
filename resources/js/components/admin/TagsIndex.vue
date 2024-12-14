@@ -80,7 +80,7 @@ export default {
                     console.log(this[varName]);
                 }).catch((error) => {
                     this.$message({
-                        message: "Не удалось загрузить данные: " + error,
+                        message: "Не удалось загрузить данные: " + error.response.data.message,
                         type: "error",
                         duration: 5000,
                         showClose: true,
@@ -112,7 +112,7 @@ export default {
                     .catch((error) => {
                         this.$loading().close();
                         this.$message({
-                            message: "Не удалось удалить: " + error,
+                            message: "Не удалось удалить: " + error.response.data.message,
                             type: "error",
                             duration: 5000,
                             showClose: true,
@@ -162,7 +162,7 @@ export default {
                 .catch((error) => {
                     this.$loading().close();
                     this.$message({
-                        message: "Не удалось сохранить данные: " + error,
+                        message: "Не удалось сохранить данные: " + error.response.data.message,
                         type: "error",
                         duration: 5000,
                         showClose: true,

@@ -41,6 +41,7 @@ const urls = {
     posts: "/api/admin/posts",
 
     general: "/api/general",
+
 };
 
 export const users = {
@@ -59,6 +60,41 @@ export const users = {
     },
     delete: (id) => {
         return axios.delete(host_path + urls.users + "/" + id);
+    },
+};
+
+export const dadata = {
+
+
+    // options: {
+    //     token: 'f5dae7899554e6a48120f640d89c035366b57ffc',
+    //     type:'ADDRESS',
+    //     options: {
+    //         "count": 5,
+    //         "from_bound": { "value": "city" },
+    //         "to_bound": { "value": "city" },
+    //         "deferRequestBy": 100
+    //     }
+    // },
+
+    address: (query) => {
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": "Token f5dae7899554e6a48120f640d89c035366b57ffc"
+            },
+        };
+
+        let params = {
+            "query": query,
+            "count": 5,
+            "from_bound": { "value": "city" },
+            "to_bound": { "value": "city" },
+        }
+
+        return axios.post('http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', params, config);
     },
 };
 
