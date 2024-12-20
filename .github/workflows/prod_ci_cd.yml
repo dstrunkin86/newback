@@ -15,7 +15,7 @@ jobs:
       - name: Update static file on server
         uses: appleboy/ssh-action@master
         with:
-          host: new.arthall.online
+          host: arthall.online
           username: root
           port: 65321
           key: ${{ secrets.PROD_SSH_KEY }}

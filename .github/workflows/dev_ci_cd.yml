@@ -15,7 +15,7 @@ jobs:
       - name: Update static file on server
         uses: appleboy/ssh-action@master
         with:
-          host: new.dev.arthall.online
+          host: dev.arthall.online
           username: root
           port: 65321
           key: ${{ secrets.DEV_SSH_KEY }}
@@ -25,24 +25,23 @@ jobs:
             git reset --hard origin/dev
             chmod 777 -R storage
 
-            mkdir -p /etc/nginx/snippets/new.arthall/
-            cp .deploy/dev/nginx/snippets/new.arthall/* /etc/nginx/snippets/new.arthall/
-            cp .deploy/dev/nginx/new.arthall.online.conf /etc/nginx/conf.d/new.arthall.online.conf
+            mkdir -p /etc/nginx/snippets/arthall/
+            cp .deploy/dev/nginx/snippets/arthall/* /etc/nginx/snippets/arthall/
+            cp .deploy/dev/nginx/arthall.online.conf /etc/nginx/conf.d/arthall.online.conf
             service nginx reload
 
-            cp .deploy/dev/supervisor/new-arthall.octane-worker.ini /etc/supervisor/conf.d/new-arthall.octane-worker.conf
-            cp .deploy/dev/supervisor/new-arthall.queue-worker.ini /etc/supervisor/conf.d/new-arthall.queue-worker.conf
+            cp .deploy/dev/supervisor/arthall.octane-worker.ini /etc/supervisor/conf.d/arthall.octane-worker.conf
+            cp .deploy/dev/supervisor/arthall.queue-worker.ini /etc/supervisor/conf.d/arthall.queue-worker.conf
             service supervisor restart
 
             yes | composer install
             npm i
 
-            cp .deploy/dev/.env /var/www/arthall/arthall.newback/.env
+            cp .deploy/prod/.env /var/www/arthall/arthall.newback/.env
             php artisan key:generate
             php artisan migrate --force
             php artisan route:cache
             php artisan storage:link
-
 
             npm run dev
       - name: Release notification
@@ -51,5 +50,5 @@ jobs:
           to: "-1001704333037"
           token: 5219393533:AAHPlGYKhMEMeEx7Ho0MFsyH5i8VXtX6los
           message: |
-            ${{ github.actor }} выкатил новый релиз на https://new.dev.arthall.online - ${{github.event.head_commit.message}}
+            ${{ github.actor }} выкатил новый релиз на https://dev.arthall.online - ${{github.event.head_commit.message}}
 
