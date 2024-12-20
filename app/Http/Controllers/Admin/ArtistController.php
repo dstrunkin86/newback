@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Filters\ArtistFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreArtistRequest;
+use App\Http\Requests\Admin\StoreArtistRequest;
 use App\Http\Requests\StoreImageRequest;
 use App\Models\Artist;
 use Illuminate\Support\Facades\Auth;

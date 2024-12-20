@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Filters\ArtworkFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Front\GetArtworkIndexRequest;
 use App\Models\Artwork;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,7 +14,7 @@ class ArtworkController extends Controller
     /**
      * Display artworks list.
      */
-    public function index(Request $request, ArtworkFilter $filter) {
+    public function index(GetArtworkIndexRequest $request, ArtworkFilter $filter) {
 
         $pageSize = (isset($request->page_size)) ? $request->page_size : 12;
 

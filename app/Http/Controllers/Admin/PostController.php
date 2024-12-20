@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreImageRequest;
-use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\Admin\StorePostRequest;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Filters\ArtistFilter;
 use App\Models\Artist;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Front\GetArtistIndexRequest;
 use Illuminate\Support\Facades\DB;
 
 class ArtistController extends Controller
@@ -13,7 +14,7 @@ class ArtistController extends Controller
     /**
      * Display artist list.
      */
-    public function index(Request $request, ArtistFilter $filter) {
+    public function index(GetArtistIndexRequest $request, ArtistFilter $filter) {
 
         $pageSize = (isset($request->page_size)) ? $request->page_size : 12;
 

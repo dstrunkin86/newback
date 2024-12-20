@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Front;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
-class StoreTagRequest extends FormRequest
+class GetCompilationIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,8 +22,11 @@ class StoreTagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => 'required|string|in:style,material,theme,genre,technique,color',
-            'title' => 'required|array',
+            'page_size' => 'sometimes|integer',
+            'sort_field' => 'sometimes|string',
+            'sort_order' => 'sometimes|string|in:asc,desc',
+
+
         ];
     }
 }

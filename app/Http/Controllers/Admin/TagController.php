@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Filters\TagFilter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\Admin\StoreTagRequest;
 use App\Models\Tag;
 use Illuminate\Support\Facades\Auth;
 

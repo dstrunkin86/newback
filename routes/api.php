@@ -13,7 +13,9 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Front\ArtistController as FrontArtistController;
 use App\Http\Controllers\Front\ArtworkController as FrontArtworkController;
 use App\Http\Controllers\Front\SettingsController as FrontSettingsController;
-
+use App\Http\Controllers\Front\CompilationController as FrontCompilationController;
+use App\Http\Controllers\Front\PostController as FrontPostController;
+use App\Http\Controllers\Front\UsersController as FrontUsersController;
 
 // общие методы для админки и ЛК художников
 Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
@@ -22,8 +24,17 @@ Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
 });
 
 // методы для фронтов
+Route::post('/users', [FrontUsersController::class, 'register']);
+Route::middleware('auth:sanctum')->patch('/users', [FrontUsersController::class, 'update']);
+
 Route::get('/artists', [FrontArtistController::class, 'index']);
 Route::get('/artists/{id}', [FrontArtistController::class, 'show']);
+
+Route::get('/compilations', [FrontCompilationController::class, 'index']);
+Route::get('/compilations/{id}', [FrontCompilationController::class, 'show']);
+
+Route::get('/posts', [FrontPostController::class, 'index']);
+Route::get('/posts/{id}', [FrontPostController::class, 'show']);
 
 Route::get('/artworks', [FrontArtworkController::class, 'index']);
 Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
