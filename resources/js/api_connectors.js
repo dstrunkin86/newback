@@ -94,7 +94,7 @@ export const dadata = {
             "to_bound": { "value": "city" },
         }
 
-        return axios.post('http://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', params, config);
+        return axios.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', params, config);
     },
 };
 
