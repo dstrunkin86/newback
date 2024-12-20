@@ -37,7 +37,7 @@ jobs:
             yes | composer install
             npm i
 
-            cp .deploy/prod/.env /var/www/arthall/arthall.newback/.env
+            cp .deploy/dev/.env /var/www/arthall/arthall.newback/.env
             php artisan key:generate
             php artisan migrate --force
             php artisan route:cache
