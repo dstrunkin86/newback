@@ -41,6 +41,8 @@ jobs:
             php artisan key:generate
             php artisan migrate --force
             php artisan route:cache
+            php artisan storage:link
+
 
             npm run dev
       - name: Release notification

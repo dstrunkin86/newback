@@ -20,7 +20,24 @@ class ArtistFilter extends Filter
 
     public function fio($value)
     {
-        return $this->builder->whereJsonContains('fio->ru', $value)->get();
+        return $this->builder
+            ->whereRaw('LOWER(fio->"$.ru") like "%'.mb_strtolower($value).'%"')
+            ->orWhereRaw('LOWER(fio->"$.en") like "%'.mb_strtolower($value).'%"')
+            ->orWhereRaw('LOWER(fio->"$.ar") like "%'.mb_strtolower($value).'%"')
+            ->orWhereRaw('LOWER(fio->"$.cn") like "%'.mb_strtolower($value).'%"');
+    }
+
+    public function having_tags($value)
+    {
+        $value = explode(",",$value);
+
+        return $this->builder->whereHas('tags', function ($query) use ($value) {
+            $query->whereIn('id', $value);
+        },'>=',count($value))->get();
+    }
+
+    public function city($value) {
+        return $this->builder->where('city', '=', $value);
     }
 
 }

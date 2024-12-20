@@ -1,5 +1,5 @@
 <?php
-
+#TODO удалить после переезда на новый Arthall
 namespace App\Console\Commands;
 
 use App\Models\Artist;

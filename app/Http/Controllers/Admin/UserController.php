@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Filters\UserFilter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\Admin\StoreUserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 

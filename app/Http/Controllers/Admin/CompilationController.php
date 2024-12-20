@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreCompilationRequest;
+use App\Http\Requests\Admin\StoreCompilationRequest;
 use App\Models\Compilation;
 use Illuminate\Support\Facades\Auth;
 

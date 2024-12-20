@@ -64,6 +64,14 @@ class Artist extends Model
     }
 
     /**
+     * Get the accepted artworks for the artist.
+     */
+    public function accepted_artworks(): HasMany
+    {
+        return $this->hasMany(Artwork::class)->where('status','accepted');
+    }
+
+    /**
      * List of the artwork tags.
      */
     public function tags(): BelongsToMany

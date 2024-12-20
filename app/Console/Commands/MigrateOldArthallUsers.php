@@ -1,5 +1,5 @@
 <?php
-
+#TODO удалить после переезда на новый Arthall
 namespace App\Console\Commands;
 
 use App\Models\OldArthall\PersonalAccessToken as OldArthallPersonalAccessToken;
@@ -32,23 +32,22 @@ class MigrateOldArthallUsers extends Command
     {
         $num_tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2023-01-01')->count();
         $this->line($num_tokens  . ' users to be created');
-        $tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2023-01-01')->chunk(10000, function ($tokens) {
+        $tokens = OldArthallPersonalAccessToken::where('last_used_at', '>', '2023-01-01')->orderBy('id','desc')->get();
+        $i = 0;
+        foreach ($tokens as $token) {
+            $user = OldArthallUser::find($token->tokenable_id);
+            $user = User::create($user->toArray());
+            $user->syncRoles(['regular_user']);
 
-            foreach ($tokens as $token) {
-                //DB::connection('mysql_old_arthall')->enableQueryLog();
-                $user = OldArthallUser::find($token->tokenable_id);
-                //$log = DB::connection('mysql_old_arthall')->getQueryLog();
-                //dd($log);
-                $user = User::create($user->toArray());
-
-                $user->syncRoles(['regular_user']);
-
-                $token->tokenable_id = $user->id;
-                $token->tokenable_type = get_class($user);
-
-                $token = PersonalAccessToken::create($token->toArray());
+            $token->tokenable_id = $user->id;
+            $token->tokenable_type = get_class($user);
+            $token = PersonalAccessToken::create($token->toArray());
+            $i++;
+            if ($i == 1000) {
+                $this->line('1000 tokens done');
+                $i = 0;
             }
-            $this->line('10000 tokens done');
-        });
+        }
+
     }
 }
