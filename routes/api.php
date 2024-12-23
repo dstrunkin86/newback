@@ -37,6 +37,7 @@ Route::get('/posts', [FrontPostController::class, 'index']);
 Route::get('/posts/{id}', [FrontPostController::class, 'show']);
 
 Route::get('/artworks', [FrontArtworkController::class, 'index']);
+Route::get('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
 Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
 
 Route::get('/settings/tags-tree', [FrontSettingsController::class, 'tagsTree']);
