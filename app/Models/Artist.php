@@ -43,6 +43,7 @@ class Artist extends Model
     protected $casts = [
         'fio' => 'object',
         'creative_concept' => 'object',
+        'city' => 'object',
         'education' => 'object',
         'qualification' => 'object',
         'exhibitions' => 'object',

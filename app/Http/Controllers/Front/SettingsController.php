@@ -26,7 +26,7 @@ class SettingsController extends Controller
      * Returns the list of available cities with artists
      */
     public function artistCities() {
-        $rawQuery = 'select distinct(city) from artists where city IS NOT NULL AND status = "accepted" AND deleted_at IS NULL';
+        $rawQuery = 'select DISTINCT(JSON_UNQUOTE(JSON_EXTRACT(city, "$.value"))) AS city from artists where city IS NOT NULL AND status = "accepted" AND deleted_at IS NULL';
         $result = DB::select($rawQuery);
         return Arr::pluck($result,'city');
     }
@@ -35,9 +35,9 @@ class SettingsController extends Controller
      * Returns the list of available cities with artworks
      */
     public function artworkCities() {
-        $rawQuery = 'select distinct(location) from artworks where location IS NOT NULL AND status = "accepted" AND deleted_at IS NULL';
+        $rawQuery = 'select DISTINCT(JSON_UNQUOTE(JSON_EXTRACT(location, "$.city"))) AS city from artworks where location IS NOT NULL AND status = "accepted" AND deleted_at IS NULL';
         $result = DB::select($rawQuery);
-        return Arr::pluck($result,'location');
+        return Arr::pluck($result,'city');
     }
 
 

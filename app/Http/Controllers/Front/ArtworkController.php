@@ -6,8 +6,10 @@ use App\Filters\ArtworkFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Front\BuyArtworkRequest;
 use App\Http\Requests\Front\GetArtworkIndexRequest;
-use App\Http\Requests\Front\GetDeliveryCostsRequest;
+use App\Http\Requests\Front\GetDeliveryCostRequest;
+use App\Http\Requests\Front\GetDeliveryOptionsRequest;
 use App\Models\Artwork;
+use App\Models\Order;
 use App\Services\Delivery\SdekService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -41,16 +43,31 @@ class ArtworkController extends Controller
     }
 
     /**
-     * Display the specified artist.
+     * Display delivery options.
      */
-    public function getDeliveryCost(GetDeliveryCostsRequest $request, $id) {
+    public function getDeliveryOptions(GetDeliveryOptionsRequest $request, $id) {
         $artwork = Artwork::findOrFail($id);
 
-        if (($artwork->width)&&($artwork->height)&&($artwork->depth)&&($artwork->weight)) {
-            return (new SdekService)->getDeliveryCosts($request->from_index, $request->to_index, $artwork->width, $artwork->height, $artwork->depth, $artwork->weight);
+        if (($artwork->width)&&($artwork->height)&&($artwork->depth)&&($artwork->weight)&&($artwork->location)) {
+            return (new SdekService)->getDeliveryOptions($artwork->location->city, $request->recepient_address['city'], $artwork->width, $artwork->height, $artwork->depth, $artwork->weight);
         } else {
             return response()->json(['error' => 'У работы не заданы обязательные параметры'],500);
         }
+    }
+
+    /**
+     * Display details for specific option.
+     */
+    public function getDeliveryCost(GetDeliveryCostRequest $request, $id) {
+        $artwork = Artwork::findOrFail($id);
+
+        if (($artwork->width)&&($artwork->height)&&($artwork->depth)&&($artwork->weight)&&($artwork->price)&&($artwork->location)) {
+            return (new SdekService)->getDeliveryCost($request->option_code, $artwork->price, $artwork->location->city, $request->recepient_address['city'], $artwork->width, $artwork->height, $artwork->depth, $artwork->weight, $request->need_insurance);
+        } else {
+            return response()->json(['error' => 'У работы не заданы обязательные параметры'],500);
+        }
+
+
 
     }
 
@@ -59,16 +76,45 @@ class ArtworkController extends Controller
      */
     public function buy(BuyArtworkRequest $request, $id) {
         $artwork = Artwork::findOrFail($id);
+        $artist = $artwork->artist;
 
-        if (($artwork->width)&&($artwork->height)&&($artwork->depth)&&($artwork->weight)) {
-            // рассчитать выбранный тип доставки
+        if (($artwork->width)&&($artwork->height)&&($artwork->depth)&&($artwork->weight)&&($artwork->price)&&($artwork->location)) {
+            //создаем новый заказ
 
-            // сделать заказ
+            $order = Order::create([
+                'artwork_id' => $artwork->id,
+                'artwork_price' => $artwork->price,
+                'recepient_address' => $request->recepient_address,
+                'recepient_contact' => $request->recepient_contact,
+                'insurance' => $request->need_insurance,
+                'delivery_system' => 'sdek',
+                'delivery_option' => $request->option_code
+            ]);
 
-            // сделать холд на сумму картины + доставки
+            // создаем заявку на доставку
 
+            $request = $order->createDeliveryRequest();
 
+            if (!$request->success) {
+                return response()->json([
+                    'error' => $request->reason
+                ],500);
+            }
 
+            // создаем платеж
+
+            $request = $order->createPayment();
+
+            if (!$request->success) {
+                return response()->json([
+                    'error' => $request->reason
+                ],500);
+            }
+
+            return response()->json([
+                'success' => true,
+                'payment_confirmation_id' => $request->payment_confirmation_id
+            ],200);
 
         } else {
             return response()->json(['error' => 'У работы не заданы обязательные параметры'],500);

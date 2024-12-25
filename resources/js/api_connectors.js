@@ -77,7 +77,7 @@ export const dadata = {
     //     }
     // },
 
-    address: (query) => {
+    address: (query, onlyCity = false) => {
 
         const config = {
             headers: {
@@ -87,12 +87,23 @@ export const dadata = {
             },
         };
 
-        let params = {
-            "query": query,
-            "count": 5,
-            "from_bound": { "value": "city" },
-            "to_bound": { "value": "city" },
+        let params = {};
+        if (onlyCity) {
+            params = {
+                "query": query,
+                "count": 5,
+                "from_bound": { "value": "city" },
+                "to_bound": { "value": "city" },
+            }
+        } else {
+            params = {
+                "query": query,
+                "count": 5,
+            }
         }
+
+        console.log(params);
+
 
         return axios.post('https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest/address', params, config);
     },

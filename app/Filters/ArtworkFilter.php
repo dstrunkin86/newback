@@ -76,6 +76,6 @@ class ArtworkFilter extends Filter
     }
 
     public function location($value) {
-        return $this->builder->where('location', '=', $value);
+        return $this->builder->whereJsonContains('location->city',$value);
     }
 }

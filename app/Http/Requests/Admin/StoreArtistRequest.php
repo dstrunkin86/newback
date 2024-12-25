@@ -32,7 +32,7 @@ class StoreArtistRequest extends FormRequest
             'vk' => 'required|string',
             'telegram' => 'required|string',
             'phone' => 'required|string',
-            'city' => 'required|string',
+            'city' => 'required|array',
             'country' => 'required|string',
             'external_id' => 'nullable|integer',
             'tags' => 'nullable|array',

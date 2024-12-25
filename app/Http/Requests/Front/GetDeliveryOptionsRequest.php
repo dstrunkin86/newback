@@ -4,7 +4,7 @@ namespace App\Http\Requests\Front;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GetDeliveryCostsRequest extends FormRequest
+class GetDeliveryOptionsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,13 @@ class GetDeliveryCostsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'from_index' => 'required|integer',
-            'to_index' => 'required|integer',
+            //recepient address block validation
+            'recepient_address' => 'required|array',
+            'recepient_address.fiasCode' => 'sometimes|nullable|string',
+            'recepient_address.postalCode' => 'sometimes|nullable|string',
+            'recepient_address.city' => 'required|string',
+            'recepient_address.region' => 'required|string',
+            'recepient_address.value' => 'required|string',
         ];
     }
 }

@@ -37,7 +37,7 @@ class ArtistFilter extends Filter
     }
 
     public function city($value) {
-        return $this->builder->where('city', '=', $value);
+        return $this->builder->whereJsonContains('city->value',$value);
     }
 
 }

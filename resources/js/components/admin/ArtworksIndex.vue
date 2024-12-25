@@ -130,15 +130,12 @@
                     <el-form-item label="Цена (руб.)" v-if="editRowData.in_sale > 0" :rules="requiredRule">
                         <el-input v-model="editRowData.price" autocomplete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="Местоположение" :rules="(editRowData.in_sale == 1) ? requiredRule : null">
-                        <!-- <el-input v-model="editRowData.location" autocomplete="off"></el-input> -->
-                        <el-select v-model="editRowData.location" filterable remote reserve-keyword
-                            placeholder="Начните вводить название" :remote-method="getDadataCities"
-                            :loading="addressLoading">
-                            <el-option v-for="item in citiesList" :key="item.fias" :label="item.name"
-                                :value="item.name">
-                            </el-option>
-                        </el-select>
+                    <el-divider></el-divider>
+
+                    <el-form-item label="Местоположение">
+                        <el-autocomplete class="inline-input" v-model="editRowData.location.value"
+                            :fetch-suggestions="getDadataCities" style="width: 100%;" placeholder="Начните ввод"
+                            :trigger-on-focus="false" @select="selectCity"></el-autocomplete>
                     </el-form-item>
                     <el-divider></el-divider>
                     <el-form-item label="Тэги">
@@ -182,6 +179,7 @@
 
 <script>
 import { artworks, tags, compilations, appLangs, dadata } from "../../api_connectors";
+
 export default {
     name: "ArtworksIndex",
     data() {
@@ -200,15 +198,45 @@ export default {
             ],
 
 
-            addressLoading: false,
-            citiesList: [],
-
         };
     },
     mounted() {
         this.getData();
     },
     methods: {
+        getDadataCities(query, cb) {
+            if ((query !== '') && (query.length > 3)) {
+                dadata.address(query)
+                    .then((response) => {
+                        console.log('response', response);
+                        let cities = response.data.suggestions.map(item => {
+                            return {
+                                fiasCode: item.data.fias_id,
+                                postalCode: item.data.postal_code,
+                                city: item.data.city,
+                                region: item.data.region,
+                                value: item.value,
+
+                            };
+                        });
+                        cb(cities);
+                    })
+                    .catch((error) => {
+                        this.$message({
+                            message: "Не удалось получить адреса: " + error.response.data.message,
+                            type: "error",
+                            duration: 5000,
+                            showClose: true,
+                        });
+                        this.addressLoading = false;
+                    });
+            }
+
+
+        },
+        selectCity(params) {
+            this.editRowData.location = params;
+        },
         getData() {
             this.$loading();
 
@@ -287,42 +315,23 @@ export default {
                 this.editRowData.compilations.forEach((element) => compilations.push(element.id));
                 this.editRowData.compilations = compilations;
             }
+
+            if (this.editRowData.location === null) {
+                this.editRowData.location = {
+                    fiasCode: '',
+                    postalCode:  '',
+                    city:  '',
+                    region: '',
+                    value:  '',
+                };
+            }
+
             console.log(this.editRowData);
             this.editDialogVisible = true;
         },
         cancelEditRow() {
             this.editRowData = null;
             this.editDialogVisible = false;
-        },
-        getDadataCities(query) {
-            console.log('query',query);
-
-            if ((query !== '') && (query.length > 3)) {
-                this.addressLoading = true;
-
-                dadata.address(query)
-                    .then((response) => {
-                        console.log('response', response);
-
-                        this.citiesList = response.data.suggestions.map(item => {
-                            return { fias: item.data.city_fias_id, name: item.data.city };
-                        });
-
-                        this.addressLoading = false;
-                        console.log('this.citiesList',this.citiesList);
-                    })
-                    .catch((error) => {
-                        this.$message({
-                            message: "Не удалось получить адреса: " + error.response.data.message,
-                            type: "error",
-                            duration: 5000,
-                            showClose: true,
-                        });
-                        this.addressLoading = false;
-                    });
-            } else {
-                this.citiesList = [];
-            }
         },
         deleteRow(id, position, varName = 'dataRows') {
             this.$loading();

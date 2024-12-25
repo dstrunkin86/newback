@@ -4,7 +4,7 @@ namespace App\Http\Requests\Front;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BuyArtworkRequest extends FormRequest
+class GetDeliveryCostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -29,12 +29,6 @@ class BuyArtworkRequest extends FormRequest
             'recepient_address.city' => 'required|string',
             'recepient_address.region' => 'required|string',
             'recepient_address.value' => 'required|string',
-
-            //recepient contact block validation
-            'recepient_contact' => 'required|array',
-            'recepient_contact.name' => 'sometimes|string',
-            'recepient_contact.email' => 'sometimes|string',
-            'recepient_contact.phone' => 'required|string',
 
             //other fields
             'need_insurance' => 'required|integer|in:0,1',

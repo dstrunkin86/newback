@@ -41,6 +41,7 @@ class Artwork extends Model
     protected $casts = [
         'title' => 'object',
         'description' => 'object',
+        'location' => 'object',
     ];
 
     public function scopeFilter(Builder $builder, Filter $filter): Builder
@@ -70,5 +71,13 @@ class Artwork extends Model
     public function compilations(): BelongsToMany
     {
         return $this->belongsToMany(Compilation::class);
+    }
+
+    /**
+     * List of the artwork orders.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

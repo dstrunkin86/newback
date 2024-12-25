@@ -122,14 +122,16 @@
                     </el-form-item>
                     <el-divider></el-divider>
 
-                    <el-form-item label="Город" :rules="requiredRule">
-                        <el-input v-model="editRowData.city" autocomplete="off"></el-input>
-                    </el-form-item>
                     <el-form-item label="Страна" :rules="requiredRule">
                         <el-select v-model="editRowData.country" width="100%">
                             <el-option v-for="country in countriesList" :label="country.text" :value="country.value"
                                 :key="country.value"></el-option>
                         </el-select>
+                    </el-form-item>
+                    <el-form-item label="Город">
+                        <el-autocomplete class="inline-input" v-model="editRowData.city.value"
+                            :fetch-suggestions="getDadataCities" style="width: 100%;" placeholder="Начните ввод"
+                            :trigger-on-focus="false" @select="selectCity"></el-autocomplete>
                     </el-form-item>
                     <el-divider></el-divider>
 
@@ -295,7 +297,7 @@
 </template>
 
 <script>
-import { artists, appLangs, tags } from "../../api_connectors";
+import { artists, appLangs, tags, dadata } from "../../api_connectors";
 import { countriesList } from "../../countries_list";
 export default {
     name: "ArtistsIndex",
@@ -321,6 +323,38 @@ export default {
         console.log('appLangs', appLangs);
     },
     methods: {
+        getDadataCities(query, cb) {
+            if ((query !== '') && (query.length > 3)) {
+                dadata.address(query, true)
+                    .then((response) => {
+                        console.log('response', response);
+                        let cities = response.data.suggestions.map(item => {
+                            return {
+                                fias: item.data.fias_id,
+                                value: item.data.city,
+                                lat: item.data.geo_lat,
+                                long: item.data.geo_lon,
+                                postIndex: item.data.postal_code
+                            };
+                        });
+                        cb(cities);
+                    })
+                    .catch((error) => {
+                        this.$message({
+                            message: "Не удалось получить адреса: " + error.response.data.message,
+                            type: "error",
+                            duration: 5000,
+                            showClose: true,
+                        });
+                        this.addressLoading = false;
+                    });
+            }
+
+
+        },
+        selectCity(params) {
+            this.editRowData.city = params;
+        },
         getData() {
             this.$loading();
 
@@ -396,6 +430,16 @@ export default {
                     this.editRowData[field] = [];
                 }
             })
+
+            if (this.editRowData.city === null) {
+                this.editRowData.city = {
+                    fias: '',
+                    value: '',
+                    lat: '',
+                    long: '',
+                    postIndex: ''
+                };
+            }
 
 
             console.log(this.editRowData);
