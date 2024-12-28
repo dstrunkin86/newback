@@ -16,6 +16,7 @@ use App\Http\Controllers\Front\SettingsController as FrontSettingsController;
 use App\Http\Controllers\Front\CompilationController as FrontCompilationController;
 use App\Http\Controllers\Front\PostController as FrontPostController;
 use App\Http\Controllers\Front\UsersController as FrontUsersController;
+use App\Http\Middleware\AfterUserRequest;
 
 // общие методы для админки и ЛК художников
 Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
@@ -23,28 +24,31 @@ Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
     Route::post('/delete-image', [GeneralImageController::class, 'destroy']);
 });
 
-// методы для фронтов
-Route::post('/users', [FrontUsersController::class, 'register']);
-Route::middleware('auth:sanctum')->patch('/users', [FrontUsersController::class, 'update']);
+Route::middleware(AfterUserRequest::class)->group(function () {
+    // методы для фронтов
+    Route::post('/users', [FrontUsersController::class, 'register']);
+    Route::middleware('auth:sanctum')->patch('/users', [FrontUsersController::class, 'update']);
 
-Route::get('/artists', [FrontArtistController::class, 'index']);
-Route::get('/artists/{id}', [FrontArtistController::class, 'show']);
+    Route::get('/artists', [FrontArtistController::class, 'index']);
+    Route::get('/artists/{id}', [FrontArtistController::class, 'show']);
 
-Route::get('/compilations', [FrontCompilationController::class, 'index']);
-Route::get('/compilations/{id}', [FrontCompilationController::class, 'show']);
+    Route::get('/compilations', [FrontCompilationController::class, 'index']);
+    Route::get('/compilations/{id}', [FrontCompilationController::class, 'show']);
 
-Route::get('/posts', [FrontPostController::class, 'index']);
-Route::get('/posts/{id}', [FrontPostController::class, 'show']);
+    Route::get('/posts', [FrontPostController::class, 'index']);
+    Route::get('/posts/{id}', [FrontPostController::class, 'show']);
 
-Route::get('/artworks', [FrontArtworkController::class, 'index']);
-Route::middleware('auth:sanctum')->post('/artworks/{id}/buy', [FrontArtworkController::class, 'buy']);
-Route::post('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
-Route::post('/artworks/{id}/delivery-options', [FrontArtworkController::class, 'getDeliveryOptions']);
-Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
+    Route::get('/artworks', [FrontArtworkController::class, 'index']);
+    Route::middleware('auth:sanctum')->post('/artworks/{id}/buy', [FrontArtworkController::class, 'buy']);
+    Route::post('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
+    Route::post('/artworks/{id}/delivery-options', [FrontArtworkController::class, 'getDeliveryOptions']);
+    Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
 
-Route::get('/settings/tags-tree', [FrontSettingsController::class, 'tagsTree']);
-Route::get('/settings/available-artist-cities', [FrontSettingsController::class, 'artistCities']);
-Route::get('/settings/available-artwork-cities', [FrontSettingsController::class, 'artworkCities']);
+    Route::get('/settings/tags-tree', [FrontSettingsController::class, 'tagsTree']);
+    Route::get('/settings/available-artist-cities', [FrontSettingsController::class, 'artistCities']);
+    Route::get('/settings/available-artwork-cities', [FrontSettingsController::class, 'artworkCities']);
+
+});
 
 //админка
 Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
