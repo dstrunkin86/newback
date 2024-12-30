@@ -12,6 +12,18 @@ use Illuminate\Support\Facades\Auth;
 class ArtistController extends Controller
 {
     /**
+     * Display a name listing of the resource.
+     */
+    public function list()
+    {
+        if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
+            return response()->json(['message' => 'Нет доступа'],401);
+        }
+        // return Artist::with(['artworks','user','tags:id,type,title'])->filter($filter)->get();
+        return Artist::orderBy('fio->ru','asc')->get(['id','fio']);
+    }
+
+    /**
      * Display a listing of the resource.
      */
     public function index(ArtistFilter $filter)

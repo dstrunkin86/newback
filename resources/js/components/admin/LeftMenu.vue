@@ -9,6 +9,10 @@
             <i class="el-icon-picture-outline"></i>
             <span>Работы</span>
         </router-link>
+        <router-link v-if="$hasRoles(['admin','moderator'])" tag="el-menu-item" to="/admin/orders">
+            <i class="el-icon-shopping-cart-full"></i>
+            <span>Заказы</span>
+        </router-link>
         <router-link v-if="$hasRoles(['admin','moderator'])" tag="el-menu-item" to="/admin/compilations">
             <i class="el-icon-finished"></i>
             <span>Подборки</span>

@@ -35,9 +35,48 @@
 
 
 
-            <div v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" class="panel-subheader">
-                Художники в
-                галерее</div>
+            <div v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" class="panel-subheader">Художники в галерее</div>
+
+
+            <el-card class="box-card">
+                <el-form ref="form" :model="filterFields" label-width="80px">
+                    <el-row>
+                        <el-col :span="6">
+                            <el-form-item label="Источник" style="margin-bottom: 0px;">
+                                <el-select v-model="filterFields.source">
+                                    <el-option label="" value=""></el-option>
+                                    <el-option label="ArtHall" value="arthall"></el-option>
+                                    <el-option label="Synergy" value="synergy"></el-option>
+                                    <el-option label="Старый ArtHall" value="old_arthall"></el-option>
+                                    <el-option label="Песочница старого ArtHall" value="arthall_sandbox"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="Статус" style="margin-bottom: 0px;">
+                                <el-select v-model="filterFields.status_in" multiple>
+                                    <el-option label="" value=""></el-option>
+                                    <el-option label="Согласован" value="accepted"></el-option>
+                                    <el-option label="Отклонен" value="rejected"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+
+                        <el-col :span="9">
+                            <el-form-item label="ФИО" style="margin-bottom: 0px;">
+                                <el-input v-model="filterFields.fio"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="3" style="padding-left:20px;">
+                                <el-button type="primary" @click="getData()">Применить</el-button>
+                        </el-col>
+                    </el-row>
+
+                </el-form>
+            </el-card>
+
+
+
             <el-table v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" :data="dataRows.data"
                 stripe>
                 <el-table-column prop="id" label="ID" width="50">
@@ -316,11 +355,16 @@ export default {
             requiredRule: [
                 { required: true, message: 'Заполните это поле', trigger: 'blur' },
             ],
+            filterFields: {
+                'status_in': ['accepted', 'rejected'],
+                'fio' : '',
+                'source': ''
+            },
         };
     },
     mounted() {
         this.getData();
-        console.log('appLangs', appLangs);
+        //console.log('appLangs', appLangs);
     },
     methods: {
         getDadataCities(query, cb) {
@@ -358,9 +402,16 @@ export default {
         getData() {
             this.$loading();
 
+            let activeFilter = {};
+            for (let key in this.filterFields) {
+                if (this.filterFields[key] != null && this.filterFields[key] != '') {
+                    activeFilter[key] = this.filterFields[key]
+                }
+            }
+
             let promises = [];
             promises.push(artists.list({ 'status_in': ['new'] }, this.newDataRowsPage));
-            promises.push(artists.list({ 'status_in': ['accepted', 'rejected'] }, this.dataRowsPage));
+            promises.push(artists.list(activeFilter, this.dataRowsPage));
             promises.push(tags.forSelect({ 'type_in': ['theme', 'style'] }));
 
             Promise.all(promises)
@@ -399,9 +450,17 @@ export default {
         },
         dataRowsPageChanged(page) {
             this.$loading();
+
+            let activeFilter = {};
+            for (let key in this.filterFields) {
+                if (this.filterFields[key] != null && this.filterFields[key] != '') {
+                    activeFilter[key] = this.filterFields[key]
+                }
+            }
+
             this.dataRowsPage = page;
             artists.
-                list({ 'status_in': ['accepted', 'rejected'] }, this.dataRowsPage)
+                list(activeFilter, this.dataRowsPage)
                 .then((response) => {
                     this.dataRows = response.data;
                     this.$loading().close();

@@ -7,6 +7,8 @@ use App\Services\Payments\YooMoneyService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use App\Filters\Filter;
 
 class Order extends Model
 {
@@ -37,6 +39,11 @@ class Order extends Model
         'recepient_contact' => 'object',
 
     ];
+
+    public function scopeFilter(Builder $builder, Filter $filter): Builder
+    {
+        return $filter->apply($builder);
+    }
 
     /**
      * Get the ordered artwork.

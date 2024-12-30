@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\CompilationController as AdminCompilationControll
 use App\Http\Controllers\Admin\PostController as AdminPostController;
 use App\Http\Controllers\Admin\TagController as AdminTagController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 
 use App\Http\Controllers\Front\ArtistController as FrontArtistController;
 use App\Http\Controllers\Front\ArtworkController as FrontArtworkController;
@@ -52,6 +53,7 @@ Route::middleware(AfterUserRequest::class)->group(function () {
 
 //админка
 Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
+    Route::get('/artists/list', [AdminArtistController::class, 'list']);
     Route::post('/artists/{id}/add-image', [AdminArtistController::class, 'addImage']);
     Route::delete('/artists/{artistId}/delete-image/{imageId}', [AdminArtistController::class, 'deleteImage']);
     Route::resource('/artists', AdminArtistController::class);
@@ -65,6 +67,8 @@ Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
     Route::post('/posts/{id}/add-image', [AdminPostController::class, 'addImage']);
     Route::delete('/posts/{postId}/delete-image/{imageId}', [AdminPostController::class, 'deleteImage']);
     Route::resource('/posts', AdminPostController::class);
+
+    Route::get('/orders', [AdminOrderController::class, 'index']);
 
 
     Route::get('/tags/tree', [AdminTagController::class, 'treeIndex']);

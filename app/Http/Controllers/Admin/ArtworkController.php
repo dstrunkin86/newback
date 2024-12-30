@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\StoreArtworkRequest;
 use App\Http\Requests\StoreImageRequest;
 use App\Models\Artwork;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ArtworkController extends Controller
 {

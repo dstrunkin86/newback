@@ -2,25 +2,23 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Filters\OrderFilter;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(OrderFilter $filter)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))){
+            return response()->json(['message' => 'Нет доступа'],401);
+        }
+        return Order::with(['artwork','artwork.artist'])->orderBy('created_at','desc')->filter($filter)->paginate(20);
     }
 
     /**
@@ -35,14 +33,6 @@ class OrderController extends Controller
      * Display the specified resource.
      */
     public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }

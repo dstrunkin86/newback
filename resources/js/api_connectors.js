@@ -37,6 +37,7 @@ const urls = {
     artworks: "/api/admin/artworks",
     compilations: "/api/admin/compilations",
     tags: "/api/admin/tags",
+    orders: "/api/admin/orders",
 
     posts: "/api/admin/posts",
 
@@ -110,7 +111,11 @@ export const dadata = {
 };
 
 export const artists = {
+    nameList: () => {
+        return axios.get(host_path + urls.artists + '/list');
+    },
     list: (filter = {}, page = 1) => {
+        console.log(filter);
         const params = new URLSearchParams(filter);
         return axios.get(host_path + urls.artists + '/?page=' + page, { params });
     },
@@ -157,6 +162,13 @@ export const artworks = {
     deleteImage: (artworkId, imageId) => {
         return axios.delete(host_path + urls.artworks + "/" + artworkId + "/delete-image/" + imageId);
     }
+};
+
+export const orders = {
+    list: (filter = {}, page = 1) => {
+        const params = new URLSearchParams(filter);
+        return axios.get(host_path + urls.orders + '/?page=' + page, { params });
+    },
 };
 
 export const posts = {

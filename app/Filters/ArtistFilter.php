@@ -20,11 +20,9 @@ class ArtistFilter extends Filter
 
     public function fio($value)
     {
+        $lower = mb_strtolower($value);
         return $this->builder
-            ->whereRaw('LOWER(fio->"$.ru") like "%'.mb_strtolower($value).'%"')
-            ->orWhereRaw('LOWER(fio->"$.en") like "%'.mb_strtolower($value).'%"')
-            ->orWhereRaw('LOWER(fio->"$.ar") like "%'.mb_strtolower($value).'%"')
-            ->orWhereRaw('LOWER(fio->"$.cn") like "%'.mb_strtolower($value).'%"');
+            ->whereRaw('( LOWER(fio->"$.ru") like "%'.$lower.'%" OR LOWER(fio->"$.en") like "%'.$lower.'%" OR LOWER(fio->"$.ar") like "%'.$lower.'%" OR LOWER(fio->"$.cn") like "%'.$lower.'%" )');
     }
 
     public function having_tags($value)
@@ -33,7 +31,7 @@ class ArtistFilter extends Filter
 
         return $this->builder->whereHas('tags', function ($query) use ($value) {
             $query->whereIn('id', $value);
-        },'>=',count($value))->get();
+        },'>=',count($value));
     }
 
     public function city($value) {

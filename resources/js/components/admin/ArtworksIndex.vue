@@ -41,6 +41,80 @@
             <div v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" class="panel-subheader">
                 Картины в галерее
             </div>
+
+            <el-card class="box-card">
+                <el-form ref="form" :model="filterFields" label-width="100px">
+                    <el-row>
+                        <el-col :span="6">
+                            <el-form-item label="Статус" style="margin-bottom: 0px;">
+                                <el-select v-model="filterFields.status_in" multiple collapse-tags>
+                                    <el-option label="" value=""></el-option>
+                                    <el-option label="Допущена" value="accepted"></el-option>
+                                    <el-option label="Отклонен" value="rejected"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="Тэги" style="margin-bottom: 0px;">
+                                <el-select v-model="filterFields.having_tags" multiple collapse-tags>
+                                    <el-option label="" value=""></el-option>
+                                    <el-option-group v-for="group in tags" :key="group.label" :label="group.label">
+                                        <el-option v-for="item in group.options" :key="item.value" :label="item.label"
+                                            :value="item.value">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="Название" style="margin-bottom: 0px;">
+                                <el-input v-model="filterFields.title"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="Автор" style="margin-bottom: 0px;">
+                                <el-select v-model="filterFields.artist_id">
+                                    <el-option label="" value=""></el-option>
+                                        <el-option v-for="item in artists" :key="item.id" :label="item.fio.ru" :value="item.id">
+                                        </el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="6" style="padding-left:20px;">
+                            <el-form-item label="В продаже" style="margin-bottom: 0px;">
+                                <el-select v-model="filterFields.in_sale" multiple>
+                                    <el-option label="" value=""></el-option>
+                                    <el-option label="Да" value=1></el-option>
+                                    <el-option label="Нет" value=0></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="Цена от" style="margin-bottom: 0px;">
+                                <el-input v-model="filterFields.price_from"></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="Цена до" style="margin-bottom: 0px;">
+                                <el-input v-model="filterFields.price_to"></el-input>
+                            </el-form-item>
+                        </el-col>
+
+
+                        <el-col :span="6" style="padding-left:20px;">
+                            <el-form-item label=" " style="margin-bottom: 0px;">
+                                <el-button type="primary" @click="getData()">Применить</el-button>
+
+                            </el-form-item>
+
+                        </el-col>
+                    </el-row>
+
+                </el-form>
+            </el-card>
+
             <el-table v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" :data="dataRows.data"
                 stripe>
                 <el-table-column prop="image" label="Изображение">
@@ -178,7 +252,7 @@
 </template>
 
 <script>
-import { artworks, tags, compilations, appLangs, dadata } from "../../api_connectors";
+import { artists, artworks, tags, compilations, appLangs, dadata } from "../../api_connectors";
 
 export default {
     name: "ArtworksIndex",
@@ -192,10 +266,20 @@ export default {
             editDialogVisible: false,
             tags: [],
             compilations: [],
+            artists: [],
             langs: appLangs,
             requiredRule: [
                 { required: true, message: 'Заполните это поле', trigger: 'blur' },
             ],
+            filterFields: {
+                'status_in': ['accepted', 'rejected'],
+                'title' : '',
+                'having_tags': [],
+                'artist_id': "",
+                "in_sale": "",
+                "price_from": "",
+                "price_to": "",
+            },
 
 
         };
@@ -240,11 +324,19 @@ export default {
         getData() {
             this.$loading();
 
+            let activeFilter = {};
+            for (let key in this.filterFields) {
+                if (this.filterFields[key] != null && this.filterFields[key] != '') {
+                    activeFilter[key] = this.filterFields[key]
+                }
+            }
+
             let promises = [];
-            promises.push(artworks.list({ 'status_in': ['new'] }));
-            promises.push(artworks.list({ 'status_in': ['accepted', 'rejected'] }));
+            promises.push(artworks.list({ 'status_in': ['new'] }, this.newDataRowsPage));
+            promises.push(artworks.list(activeFilter, this.dataRowsPage));
             promises.push(tags.forSelect());
             promises.push(compilations.list());
+            promises.push(artists.nameList());
 
             Promise.all(promises)
                 .then((response) => {
@@ -253,6 +345,8 @@ export default {
                     console.log('incoming', this.dataRows);
                     this.tags = response[2].data;
                     this.compilations = response[3].data;
+                    this.artists = response[4].data;
+                    console.log('artists',this.artists);
                     this.$loading().close();
                 }).catch((error) => {
                     this.$loading().close();
@@ -284,9 +378,17 @@ export default {
         },
         dataRowsPageChanged(page) {
             this.$loading();
+
+            let activeFilter = {};
+            for (let key in this.filterFields) {
+                if (this.filterFields[key] != null && this.filterFields[key] != '') {
+                    activeFilter[key] = this.filterFields[key]
+                }
+            }
+
             this.dataRowsPage = page;
             artworks.
-                list({ 'status_in': ['accepted', 'rejected'] }, this.dataRowsPage)
+                list(activeFilter, this.dataRowsPage)
                 .then((response) => {
                     this.dataRows = response.data;
                     this.$loading().close();
@@ -319,10 +421,10 @@ export default {
             if (this.editRowData.location === null) {
                 this.editRowData.location = {
                     fiasCode: '',
-                    postalCode:  '',
-                    city:  '',
+                    postalCode: '',
+                    city: '',
                     region: '',
-                    value:  '',
+                    value: '',
                 };
             }
 

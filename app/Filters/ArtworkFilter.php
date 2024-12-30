@@ -15,11 +15,9 @@ class ArtworkFilter extends Filter
 
     public function title($value)
     {
+        $lower = mb_strtolower($value);
         return $this->builder
-            ->whereRaw('LOWER(title->"$.ru") like "%'.mb_strtolower($value).'%"')
-            ->orWhereRaw('LOWER(title->"$.en") like "%'.mb_strtolower($value).'%"')
-            ->orWhereRaw('LOWER(title->"$.ar") like "%'.mb_strtolower($value).'%"')
-            ->orWhereRaw('LOWER(title->"$.cn") like "%'.mb_strtolower($value).'%"');
+            ->whereRaw('(LOWER(title->"$.ru") like "%'.$lower.'%" OR LOWER(title->"$.en") like "%'.$lower.'%" OR LOWER(title->"$.ar") like "%'.$lower.'%" OR LOWER(title->"$.cn") like "%'.$lower.'%")');
     }
 
     public function having_tags($value)
@@ -28,27 +26,27 @@ class ArtworkFilter extends Filter
 
         return $this->builder->whereHas('tags', function ($query) use ($value) {
             $query->whereIn('id', $value);
-        },'>=',count($value))->get();
+        },'>=',count($value));
     }
 
     public function artist_id($value)
     {
-        return $this->builder->where('artist_id', $value)->get();
+        return $this->builder->where('artist_id', $value);
     }
 
     public function in_sale($value)
     {
-        return $this->builder->where('in_sale', intval($value))->get();
+        return $this->builder->where('in_sale', intval($value));
     }
 
     public function price_from($value)
     {
-        return $this->builder->where('price', '>=', intval($value))->where('in_sale',1)->get();
+        return $this->builder->where('price', '>=', intval($value))->where('in_sale',1);
     }
 
     public function price_to($value)
     {
-        return $this->builder->where('price', '<=', intval($value))->where('in_sale',1)->get();
+        return $this->builder->where('price', '<=', intval($value))->where('in_sale',1);
     }
 
     public function width_from($value) {

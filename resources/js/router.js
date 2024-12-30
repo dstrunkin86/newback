@@ -6,6 +6,7 @@ import ArtworksIndex from "./components/admin/ArtworksIndex.vue";
 import UsersIndex from "./components/admin/UsersIndex.vue";
 import TagsIndex from "./components/admin/TagsIndex.vue";
 import PostsIndex from "./components/admin/PostsIndex.vue";
+import OrdersIndex from "./components/admin/OrdersIndex.vue";
 import CompilationsIndex from "./components/admin/CompilationsIndex.vue";
 
 
@@ -25,7 +26,11 @@ export default new Router({
             name: "artworks",
             component: ArtworksIndex,
         },
-
+        {
+            path: "/admin/orders",
+            name: "orders",
+            component: OrdersIndex,
+        },
         {
             path: "/admin/compilations",
             name: "compilations",
