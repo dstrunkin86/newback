@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Front\AddArtistArtwork;
 use App\Http\Requests\Front\LoginUserRequest;
 use App\Http\Requests\Front\StoreArtistRequest;
 use App\Http\Requests\Front\StoreOrUpdateUserRequest;
+use App\Http\Requests\Front\UpdateArtistRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -47,7 +49,7 @@ class UsersController extends Controller
     {
         $user = $request->user();
 
-        $user->load(['artist','artist.artworks']);
+        $user->load(['artist', 'artist.artworks']);
 
         return response()->json(['user' => $user], 200);
     }
@@ -120,110 +122,4 @@ class UsersController extends Controller
         }
     }
 
-    public function registerArtist(StoreArtistRequest $request) {
-        // проверить email и пароль
-        $user = $request->user();
-
-        if ($user->artist) {
-            return response()->json(
-                [
-                    'message' => 'У пользователя уже есть учетная запись автора',
-                    "errors" =>  [
-                        [
-                            'У пользователя уже есть учетная запись автора'
-                        ]
-                    ]
-                ],
-                403
-            );
-        }
-
-        if (($user->password == NULL) || ($user->email == NULL)) {
-            return response()->json(
-                [
-                    'message' => 'У пользователя не задан email или пароль',
-                    "errors" =>  [
-                        "email" => [
-                            'У пользователя не задан email'
-                        ],
-                        "password" => [
-                            'У пользователя не задан пароль'
-                        ]
-                    ]
-                ],
-                422
-            );
-        }
-
-        $data = $request->validated();
-
-        // сохранить данные
-        $tags = [];
-        if (isset($data['tags'])) {
-            $tags = $data['tags'];
-            unset($data['tags']);
-        }
-
-        $data['email'] = $user->email;
-
-        $artist = $user->artist()->create($data);
-        if (count($tags)>0) $artist->tags()->sync($tags);
-        if (count($data['images'])>0) $artist->updateImages($data['images']);
-        if (count($data['artworks'])>0) {
-            foreach ($data['artworks'] as $incoming_artwork) {
-                $artwork = $artist->artworks()->create($incoming_artwork);
-                $artwork->updateImages($incoming_artwork['images']);
-            }
-        }
-
-        // поднять роль
-        $user->assignRole('artist');
-        $user->refresh();
-        $user->load(['artist','artist.artworks']);
-
-
-        return response()->json(['user' => $user], 200);
-
-    }
-
-    // public function updateArtist(UpdateArtistRequest $request) {
-    //     // проверить email и пароль
-    //     $user = $request->user();
-
-    //     if (!$user->artist) {
-    //         return response()->json(
-    //             [
-    //                 'message' => 'У пользователя нет учетной записи автора',
-    //                 "errors" =>  [
-    //                     [
-    //                         'У пользователя нет учетной записи автора'
-    //                     ]
-    //                 ]
-    //             ],
-    //             403
-    //         );
-    //     }
-
-    //     $data = $request->validated();
-
-    //     // сохранить данные
-    //     $tags = [];
-    //     if (isset($data['tags'])) {
-    //         $tags = $data['tags'];
-    //         unset($data['tags']);
-    //     }
-
-    //     $data['email'] = $user->email;
-
-    //     $artist = $user->artist()->update($request->validated());
-    //     if (count($tags)>0) $artist->tags()->sync($tags);
-
-    //     // поднять роль
-    //     $user->assignRole('artist');
-
-    // }
-
-    // Route::middleware('auth:sanctum')->post('/users/artist', [FrontUsersController::class, 'registerArtist']);
-    // Route::middleware('auth:sanctum')->patch('/users/artist', [FrontUsersController::class, 'updateArtist']);
-    // Route::middleware('auth:sanctum')->get('/users/orders', [FrontUsersController::class, 'userArtistOrders']);
 }

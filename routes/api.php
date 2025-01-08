@@ -17,6 +17,7 @@ use App\Http\Controllers\Front\SettingsController as FrontSettingsController;
 use App\Http\Controllers\Front\CompilationController as FrontCompilationController;
 use App\Http\Controllers\Front\PostController as FrontPostController;
 use App\Http\Controllers\Front\UsersController as FrontUsersController;
+use App\Http\Controllers\Front\OrderController as FrontOrderController;
 use App\Http\Middleware\AfterUserRequest;
 
 // общие методы для админки и ЛК художников
@@ -31,12 +32,13 @@ Route::middleware(AfterUserRequest::class)->group(function () {
     Route::post('/users', [FrontUsersController::class, 'register']);
     Route::middleware('auth:sanctum')->get('/users', [FrontUsersController::class, 'show']);
     Route::middleware('auth:sanctum')->patch('/users', [FrontUsersController::class, 'update']);
-    Route::middleware('auth:sanctum')->post('/users/artist', [FrontUsersController::class, 'registerArtist']);
-    Route::middleware('auth:sanctum')->patch('/users/artist', [FrontUsersController::class, 'updateArtist']);
-    Route::middleware('auth:sanctum')->get('/users/orders', [FrontUsersController::class, 'userArtistOrders']);
+
+    Route::middleware('auth:sanctum')->get('/users/orders', [FrontUsersController::class, 'artistOrders']);
 
     Route::get('/artists', [FrontArtistController::class, 'index']);
     Route::get('/artists/{id}', [FrontArtistController::class, 'show']);
+    Route::middleware('auth:sanctum')->post('/artists', [FrontArtistController::class, 'registerArtist']);
+    Route::middleware('auth:sanctum')->patch('/artists', [FrontArtistController::class, 'updateArtist']);
 
     Route::get('/compilations', [FrontCompilationController::class, 'index']);
     Route::get('/compilations/{id}', [FrontCompilationController::class, 'show']);
@@ -49,6 +51,13 @@ Route::middleware(AfterUserRequest::class)->group(function () {
     Route::middleware('auth:sanctum')->post('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
     Route::middleware('auth:sanctum')->post('/artworks/{id}/delivery-options', [FrontArtworkController::class, 'getDeliveryOptions']);
     Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
+    Route::middleware('auth:sanctum')->post('/artworks', [FrontArtworkController::class, 'addArtistArtwork']);
+    Route::middleware('auth:sanctum')->delete('/artworks/{artworkId}', [FrontArtworkController::class, 'deleteArtistArtwork']);
+
+    Route::middleware('auth:sanctum')->get('/orders/artist-list', [FrontOrderController::class, 'artistOrdersList']);
+    Route::middleware('auth:sanctum')->patch('/orders/{orderId}/accept-order', [FrontOrderController::class, 'artistAcceptOrder']);
+    Route::middleware('auth:sanctum')->patch('/orders/{orderId}/cancel-order', [FrontOrderController::class, 'artistCancelOrder']);
+    Route::middleware('auth:sanctum')->post('/orders/{orderId}/call-courier', [FrontOrderController::class, 'artistCallCourier']);
 
     Route::get('/settings/tags-tree', [FrontSettingsController::class, 'tagsTree']);
     Route::get('/settings/available-artist-cities', [FrontSettingsController::class, 'artistCities']);

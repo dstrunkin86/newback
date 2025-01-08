@@ -143,6 +143,4 @@ class Order extends Model
     }
 
 
-
-
 }

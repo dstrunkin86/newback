@@ -153,35 +153,35 @@ class SdekService
                 "tariff_code": "' . $tariff_code . '",
                 "comment": "Заказ на сайте arthall.online",
                 "sender": {
-                    "company": "'.$sender_name.'",
-                    "name": "'.$sender_name.'",
-                    "email": "'.$sender_email.'",
+                    "company": "' . $sender_name . '",
+                    "name": "' . $sender_name . '",
+                    "email": "' . $sender_email . '",
                     "phones": [
                         {
-                            "number": "'.$sender_phone.'"
+                            "number": "' . $sender_phone . '"
                         }
                     ]
                 },
                 "recipient": {
-                    "company": "'.$recepient_name.'",
-                    "name": "'.$recepient_name.'",
-                    "email": "'.$recepient_email.'",
+                    "company": "' . $recepient_name . '",
+                    "name": "' . $recepient_name . '",
+                    "email": "' . $recepient_email . '",
                     "phones": [
                         {
-                            "number": "'.$recepient_phone.'"
+                            "number": "' . $recepient_phone . '"
                         }
                     ]
                 },
                 "from_location": {
-                    "address": "'.$from_address.'"
+                    "address": "' . $from_address . '"
                 },
                 "to_location": {
-                    "address": "'.$to_address.'"
+                    "address": "' . $to_address . '"
                 },
                 "services": [
                     {
                         "code": "INSURANCE",
-                        "parameter": "'.$price.'"
+                        "parameter": "' . $price . '"
                     }
                 ],
                 "packages": [
@@ -201,30 +201,30 @@ class SdekService
                 "tariff_code": "' . $tariff_code . '",
                 "comment": "Заказ на сайте arthall.online",
                 "sender": {
-                    "company": "'.$sender_name.'",
-                    "name": "'.$sender_name.'",
-                    "email: "'.$sender_email.'",
+                    "company": "' . $sender_name . '",
+                    "name": "' . $sender_name . '",
+                    "email: "' . $sender_email . '",
                     "phones": [
                         {
-                            "number": "'.$sender_phone.'"
+                            "number": "' . $sender_phone . '"
                         }
                     ]
                 },
                 "recipient": {
-                    "company": "'.$recepient_name.'",
-                    "name": "'.$recepient_name.'",
-                    "email": "'.$recepient_email.'",
+                    "company": "' . $recepient_name . '",
+                    "name": "' . $recepient_name . '",
+                    "email": "' . $recepient_email . '",
                     "phones": [
                         {
-                            "number": "'.$recepient_phone.'"
+                            "number": "' . $recepient_phone . '"
                         }
                     ]
                 },
                 "from_location": {
-                    "address": "'.$from_address.'"
+                    "address": "' . $from_address . '"
                 },
                 "to_location": {
-                    "address": "'.$to_address.'"
+                    "address": "' . $to_address . '"
                 },
                 "packages": [
                     {
@@ -274,7 +274,53 @@ class SdekService
         }
     }
 
-    public function callCourier(Order $order) {}
+    public function callCourier($delivery_date, $delivery_time_from, $delivery_time_to, $delivery_order_id, $sender_name, $sender_phone, $sender_address, $courier_comment)
+    {
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.edu.cdek.ru/v2/intakes',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => '{
+                "intake_date": "'.$delivery_date.'",
+                "intake_time_from": "'.$delivery_time_from.'",
+                "intake_time_to": "'.$delivery_time_to.'",
+                "order_uuid": "'.$delivery_order_id.'",
+                "comment": "'.$courier_comment.'",
+                "name": "'.$sender_name.'",
+                "number": "'.$sender_phone.'",
+                "address": "'.$sender_address.'",
+                "need_call": true
+            }',
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/json',
+                'Authorization: Bearer ' . $this->getToken()
+            ),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+        $response = json_decode($response);
+
+        if ($response->requests[0]->state == "ACCEPTED") {
+            return (object) [
+                'success' => true
+            ];
+        } else {
+            return (object) [
+                'success' => false,
+                'reason' => 'Не удалось вызвать курьера'
+            ];
+        }
+    }
 
     public function cancelDeliveryRequest(Order $order) {}
 

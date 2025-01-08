@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Filters\ArtworkFilter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Front\AddArtistArtwork;
 use App\Http\Requests\Front\BuyArtworkRequest;
 use App\Http\Requests\Front\GetArtworkIndexRequest;
 use App\Http\Requests\Front\GetDeliveryCostRequest;
@@ -121,4 +122,74 @@ class ArtworkController extends Controller
         }
 
     }
+
+    public function addArtistArtwork(AddArtistArtwork $request)
+    {
+        $user = $request->user();
+
+        $data = $request->validated();
+
+        // сохранить данные
+        $tags = [];
+        if (isset($data['tags'])) {
+            $tags = $data['tags'];
+            unset($data['tags']);
+        }
+
+        $images = [];
+        if (isset($data['images'])) {
+            $images = $data['images'];
+            unset($data['images']);
+        }
+
+        $artwork = $user->artist->artworks()->create($data);
+
+        if (count($tags) > 0) $artwork->tags()->sync($tags);
+
+        if (count($images) > 0) $artwork->updateImages($images);
+
+        $artwork->refresh();
+
+        return response()->json(['artwork' => $artwork], 200);
+    }
+
+    public function deleteArtistArtwork(Request $request, $artworkId)
+    {
+        $user = $request->user();
+
+        $artwork = $user->artist->artworks()->findOrFail($artworkId);
+
+        if (count($artwork->orders()->whereNotIn('status',['cancelled_by_user','cancelled_by_system'])->get())>0) {
+            return response()->json(
+                [
+                    'message' => 'У работы есть активные заказы. Для удаления свяжитесь с менеджером',
+                    "errors" =>  [
+                        [
+                            'У работы есть активные заказы. Для удаления свяжитесь с менеджером'
+                        ]
+                    ]
+                ],
+                403
+            );
+        }
+        if (count($artwork->compilations)>0) {
+            return response()->json(
+                [
+                    'message' => 'У работы есть активные подборки. Для удаления свяжитесь с менеджером',
+                    "errors" =>  [
+                        [
+                            'У работы есть активные подборки. Для удаления свяжитесь с менеджером'
+                        ]
+                    ]
+                ],
+                403
+            );
+        }
+        $artwork->delete();
+
+        return response()->json(['status' => 'success'],200);
+
+    }
+    //TODO: нужна команда каждую ночь, которая будет удалять картинки, которые нигде не используются. При этом, надо смотреть, чтобы у deleted_at сущностей картинки не удалялись
+
 }
