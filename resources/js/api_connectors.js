@@ -251,6 +251,7 @@ export const images = {
         let data = {
             url: url
         };
-        return axios.post(host_path + urls.general + '/delete-image', data);
+        const params = new URLSearchParams(data);
+        return axios.delete(host_path + urls.general + '/delete-image', params);
     },
 };

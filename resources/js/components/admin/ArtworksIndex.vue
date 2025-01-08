@@ -8,7 +8,7 @@
                 :data="newDataRows.data" stripe>
                 <el-table-column prop="image" label="Изображение">
                     <template slot-scope="scope">
-                        <el-image style="width: 150px; height: 150px" :src="scope.row.images[0].url"
+                        <el-image style="width: 150px; height: 150px" :src="(scope.row.images.length > 0) ? scope.row.images[0].url:''"
                             fit="cover"></el-image>
                     </template>
                 </el-table-column>

@@ -22,13 +22,18 @@ use App\Http\Middleware\AfterUserRequest;
 // общие методы для админки и ЛК художников
 Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
     Route::post('/store-image', [GeneralImageController::class, 'store']);
-    Route::post('/delete-image', [GeneralImageController::class, 'destroy']);
+    Route::delete('/delete-image', [GeneralImageController::class, 'destroy']);
 });
 
 Route::middleware(AfterUserRequest::class)->group(function () {
     // методы для фронтов
+    Route::post('/users/login', [FrontUsersController::class, 'login']);
     Route::post('/users', [FrontUsersController::class, 'register']);
+    Route::middleware('auth:sanctum')->get('/users', [FrontUsersController::class, 'show']);
     Route::middleware('auth:sanctum')->patch('/users', [FrontUsersController::class, 'update']);
+    Route::middleware('auth:sanctum')->post('/users/artist', [FrontUsersController::class, 'registerArtist']);
+    Route::middleware('auth:sanctum')->patch('/users/artist', [FrontUsersController::class, 'updateArtist']);
+    Route::middleware('auth:sanctum')->get('/users/orders', [FrontUsersController::class, 'userArtistOrders']);
 
     Route::get('/artists', [FrontArtistController::class, 'index']);
     Route::get('/artists/{id}', [FrontArtistController::class, 'show']);
@@ -41,8 +46,8 @@ Route::middleware(AfterUserRequest::class)->group(function () {
 
     Route::get('/artworks', [FrontArtworkController::class, 'index']);
     Route::middleware('auth:sanctum')->post('/artworks/{id}/buy', [FrontArtworkController::class, 'buy']);
-    Route::post('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
-    Route::post('/artworks/{id}/delivery-options', [FrontArtworkController::class, 'getDeliveryOptions']);
+    Route::middleware('auth:sanctum')->post('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
+    Route::middleware('auth:sanctum')->post('/artworks/{id}/delivery-options', [FrontArtworkController::class, 'getDeliveryOptions']);
     Route::get('/artworks/{id}', [FrontArtworkController::class, 'show']);
 
     Route::get('/settings/tags-tree', [FrontSettingsController::class, 'tagsTree']);
@@ -69,7 +74,6 @@ Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
     Route::resource('/posts', AdminPostController::class);
 
     Route::get('/orders', [AdminOrderController::class, 'index']);
-
 
     Route::get('/tags/tree', [AdminTagController::class, 'treeIndex']);
     Route::get('/tags/for-select', [AdminTagController::class, 'forSelectIndex']);

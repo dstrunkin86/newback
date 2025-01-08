@@ -114,9 +114,8 @@
                     <el-form-item label="Источник">
                         <span>{{ formatSource(null, null, editRowData.source) }}</span>
                     </el-form-item>
-                    <el-form-item label="Информация при импорте">
+                    <el-form-item label="Информация при импорте" v-if="editRowData.tech_info">
                         <div v-for="[key, value] in Object.entries(editRowData.tech_info)">{{ key }} - {{ value }}</div>
-
                     </el-form-item>
 
                     <el-divider></el-divider>

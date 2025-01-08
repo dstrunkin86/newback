@@ -15,9 +15,9 @@ class ImageController extends Controller
      */
     public function store(StoreImageRequest $request)
     {
-        if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator') || Auth::user()->hasRole('artist'))){
-            return response()->json(['message' => 'Нет доступа'],401);
-        }
+        // if (!(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator') || Auth::user()->hasRole('artist'))){
+        //     return response()->json(['message' => 'Нет доступа'],401);
+        // }
 
         if ($request->file('file') != '') {
             $fileName = microtime(true). '.' . $request->file('file')->getClientOriginalExtension();
@@ -52,6 +52,6 @@ class ImageController extends Controller
             unlink(storage_path('app/public/images/'. $file));
         }
 
-        return response()->json(['status' => 'success',200]);
+        return response()->json(['status' => 'success'],200);
     }
 }

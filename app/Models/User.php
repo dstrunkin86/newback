@@ -31,7 +31,6 @@ class User extends Authenticatable
         'password',
         'fcm_token',
         'lang',
-        'device_name'
     ];
 
     /**

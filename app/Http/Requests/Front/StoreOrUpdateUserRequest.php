@@ -23,7 +23,7 @@ class StoreOrUpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'string|max:255',
-            'email' => 'string|email|max:255|unique:users',
+            'email' => 'string|email|max:255',
             'lang' => 'string|max:2|in:ru,en,cn,ar',
             'fcm_token' => 'string',
             'password' => 'string|min:6',
