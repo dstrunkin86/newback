@@ -17,7 +17,7 @@ class ArtworkFilter extends Filter
     {
         $lower = mb_strtolower($value);
         return $this->builder
-            ->whereRaw('(LOWER(title->"$.ru") like "%'.$lower.'%" OR LOWER(title->"$.en") like "%'.$lower.'%" OR LOWER(title->"$.ar") like "%'.$lower.'%" OR LOWER(title->"$.cn") like "%'.$lower.'%")');
+            ->whereRaw('(LOWER(JSON_VALUE(title, "$.ru")) like "%'.$lower.'%" OR LOWER(JSON_VALUE(title, "$.en")) like "%'.$lower.'%" OR LOWER(JSON_VALUE(title, "$.ar")) like "%'.$lower.'%" OR LOWER(JSON_VALUE(title, "$.cn")) like "%'.$lower.'%")');
     }
 
     public function having_tags($value)

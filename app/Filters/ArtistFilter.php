@@ -22,7 +22,7 @@ class ArtistFilter extends Filter
     {
         $lower = mb_strtolower($value);
         return $this->builder
-            ->whereRaw('( LOWER(fio->"$.ru") like "%'.$lower.'%" OR LOWER(fio->"$.en") like "%'.$lower.'%" OR LOWER(fio->"$.ar") like "%'.$lower.'%" OR LOWER(fio->"$.cn") like "%'.$lower.'%" )');
+            ->whereRaw('( LOWER(JSON_VALUE(fio, "$.ru")) like "%'.$lower.'%" OR LOWER(JSON_VALUE(fio, "$.en")) like "%'.$lower.'%" OR LOWER(JSON_VALUE(fio, "$.ar")) like "%'.$lower.'%" OR LOWER(JSON_VALUE(fio, "$.cn")) like "%'.$lower.'%" )');
     }
 
     public function having_tags($value)

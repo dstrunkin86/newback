@@ -19,14 +19,15 @@ use App\Http\Controllers\Front\PostController as FrontPostController;
 use App\Http\Controllers\Front\UsersController as FrontUsersController;
 use App\Http\Controllers\Front\OrderController as FrontOrderController;
 use App\Http\Middleware\AfterUserRequest;
+use App\Http\Middleware\ForceJsonResponse;
 
 // общие методы для админки и ЛК художников
-Route::prefix('/general')->middleware('auth:sanctum')->group(function () {
+Route::prefix('/general')->middleware(['auth:sanctum', ForceJsonResponse::class])->group(function () {
     Route::post('/store-image', [GeneralImageController::class, 'store']);
     Route::delete('/delete-image', [GeneralImageController::class, 'destroy']);
 });
 
-Route::middleware(AfterUserRequest::class)->group(function () {
+Route::middleware([AfterUserRequest::class, ForceJsonResponse::class])->group(function () {
     // методы для фронтов
     Route::post('/users/login', [FrontUsersController::class, 'login']);
     Route::post('/users', [FrontUsersController::class, 'register']);
@@ -66,7 +67,7 @@ Route::middleware(AfterUserRequest::class)->group(function () {
 });
 
 //админка
-Route::prefix('/admin')->middleware('auth:sanctum')->group(function () {
+Route::prefix('/admin')->middleware(['auth:sanctum', ForceJsonResponse::class])->group(function () {
     Route::get('/artists/list', [AdminArtistController::class, 'list']);
     Route::post('/artists/{id}/add-image', [AdminArtistController::class, 'addImage']);
     Route::delete('/artists/{artistId}/delete-image/{imageId}', [AdminArtistController::class, 'deleteImage']);
