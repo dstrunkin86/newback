@@ -113,6 +113,7 @@ class ArtworkController extends Controller
             }
 
             return response()->json([
+                'order_id' => $order->id,
                 'success' => true,
                 'payment_confirmation_id' => $request->payment_confirmation_id
             ],200);
