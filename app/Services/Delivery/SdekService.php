@@ -101,10 +101,10 @@ class SdekService
                 "currency": 1,
                 "tariff_code": "' . $tariff_code . '",
                 "from_location": {
-                    "postal_code": "' . $from_city . '"
+                    "address": "' . $from_city . '"
                 },
                 "to_location": {
-                    "postal_code": "' . $to_city . '"
+                    "address": "' . $to_city . '"
                 },
                 "packages": [
                     {
@@ -138,6 +138,7 @@ class SdekService
 
 
         $response = json_decode($response);
+        //dd($response);
 
         return $this->formatDeliveryType($response);
     }
@@ -203,7 +204,7 @@ class SdekService
                 "sender": {
                     "company": "' . $sender_name . '",
                     "name": "' . $sender_name . '",
-                    "email: "' . $sender_email . '",
+                    "email": "' . $sender_email . '",
                     "phones": [
                         {
                             "number": "' . $sender_phone . '"
