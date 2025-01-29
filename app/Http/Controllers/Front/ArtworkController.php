@@ -28,9 +28,15 @@ class ArtworkController extends Controller
 
         $sortOrder = (isset($request->sort_order)) ? $request->sort_order : 'desc';
 
-        // DB::enableQueryLog();
-        $result = Artwork::query()->with(['artist'])->where('status','accepted')->filter($filter)->orderBy($sortField,$sortOrder)->paginate($pageSize);
-        // dd(DB::getQueryLog());
+        $result = Artwork::query()->with(['artist'])->where('status','accepted')->filter($filter);
+
+        if ($sortField == 'price') {
+            $result = $result->orderBy('in_sale','desc')->orderBy('price',$sortOrder);
+        } else {
+            $result = $result->orderBy($sortField,$sortOrder);
+        }
+        $result = $result->paginate($pageSize);
+
         return $result;
     }
 
