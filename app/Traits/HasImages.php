@@ -91,11 +91,19 @@ trait HasImages
 
     public function GetImagesAttribute()
     {
-        return Image::where([
+        $images = Image::where([
             ['model_type', get_class($this)],
             ['model_id', $this->id]
         ])->orderBy('priority', 'asc')
             ->get()
             ->toArray();
+
+        // TODO: сделать сохранение картинок при загрузке и пачкой скриптом в webP с максимальным размером 300px по большему размеру с именем preview_<нормальное имя> и раскомментить строки ниже
+        foreach ($images as $key=>$image) {
+            //$images[$key]['preview_url'] = str_replace('/storage/images/','/storage/images/preview_',$image['url']);
+            $images[$key]['preview_url'] = str_replace('/storage/images/','/storage/images/',$image['url']);
+        }
+
+        return $images;
     }
 }
