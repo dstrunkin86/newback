@@ -30,11 +30,17 @@ class ArtworkController extends Controller
 
         $result = Artwork::query()->with(['artist'])->where('status','accepted')->filter($filter);
 
-        if ($sortField == 'price') {
-            $result = $result->orderBy('in_sale','desc')->orderBy('price',$sortOrder);
-        } else {
+        switch ($sortField) {
+            case 'price':
+                $result = $result->orderBy('in_sale','desc')->orderBy('price',$sortOrder);
+                break;
+            case 'random':
+                $result = $result->inRandomOrder();
+                break;
+            default:
             $result = $result->orderBy($sortField,$sortOrder);
         }
+
         $result = $result->paginate($pageSize);
 
         return $result;
@@ -45,7 +51,7 @@ class ArtworkController extends Controller
      */
     public function show($id)
     {
-        $artwork = Artwork::with(['artist','tags:id,type,title','compilations'])->findOrFail($id);
+        $artwork = Artwork::with(['artist','tags:id,type,title','compilations'])->findOrFail($id)->append('similar_paintings');
         return $artwork;
     }
 

@@ -80,4 +80,12 @@ class Artwork extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    /**
+     * Список похожих картин.
+     */
+    public function getSimilarPaintingsAttribute()
+    {
+        return Artwork::where('id','<>',$this->id)->where('status','accepted')->inRandomOrder()->limit(5)->get();
+    }
 }
