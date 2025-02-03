@@ -162,6 +162,9 @@
                     <el-form-item label="Художник">
                         <span>{{ editRowData.artist.fio.ru }}</span>
                     </el-form-item>
+                    <el-form-item label="Информация при импорте" v-if="editRowData.tech_info">
+                        <div v-for="[key, value] in Object.entries(editRowData.tech_info)">{{ key }} - {{ value }}</div>
+                    </el-form-item>
                     <el-divider></el-divider>
 
                     <el-form-item v-for="lang in langs" :label="'Название' + lang.lineEnding"

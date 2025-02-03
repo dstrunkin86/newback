@@ -42,7 +42,7 @@ class Artwork extends Model
     protected $casts = [
         'title' => 'object',
         'description' => 'object',
-        //'location' => 'object',
+        'location' => 'object',
         'tech_info' => 'object'
     ];
 
