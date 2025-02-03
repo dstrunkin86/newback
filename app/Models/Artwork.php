@@ -34,6 +34,7 @@ class Artwork extends Model
         'weight',
         'in_sale',
         'price',
+        'tech_info'
 
 
     ];
@@ -42,6 +43,7 @@ class Artwork extends Model
         'title' => 'object',
         'description' => 'object',
         'location' => 'object',
+        'tech_info' => 'object'
     ];
 
     public function scopeFilter(Builder $builder, Filter $filter): Builder
