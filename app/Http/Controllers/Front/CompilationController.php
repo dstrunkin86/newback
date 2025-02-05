@@ -20,7 +20,7 @@ class CompilationController extends Controller
 
         $sortOrder = (isset($request->sort_order)) ? $request->sort_order : 'asc';
 
-        $result = Compilation::query()->where('is_published',1)->orderBy($sortField,$sortOrder)->paginate($pageSize);
+        $result = Compilation::query()->with(['artworks.artist'])->where('is_published',1)->orderBy($sortField,$sortOrder)->paginate($pageSize);
         return $result;
     }
 
@@ -29,7 +29,7 @@ class CompilationController extends Controller
      */
     public function show(string $id)
     {
-        $compilation = Compilation::with(['artworks'])->findOrFail($id);
+        $compilation = Compilation::with(['artworks.artist'])->findOrFail($id);
         return $compilation;
     }
 }

@@ -55,7 +55,7 @@ class SdekService
 
         $response = json_decode($response);
 
-        if (is_array($response->tariff_codes)) {
+        if (isset($response->tariff_codes) && is_array($response->tariff_codes)) {
             return $this->formatDeliveryTypes(array_filter($response->tariff_codes, [$this, 'returnAcceptedDeliveryTypes']));
         } else {
             return [];
