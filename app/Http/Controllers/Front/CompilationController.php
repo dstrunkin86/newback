@@ -20,7 +20,7 @@ class CompilationController extends Controller
 
         $sortOrder = (isset($request->sort_order)) ? $request->sort_order : 'asc';
 
-        $result = Compilation::query()->where('is_published',1)->orderBy($sortField,$sortOrder)->paginate($pageSize);
+        $result = Compilation::query()->with(['artworks'])->where('is_published',1)->orderBy($sortField,$sortOrder)->paginate($pageSize);
         return $result;
     }
 
