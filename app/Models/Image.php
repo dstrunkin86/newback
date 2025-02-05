@@ -11,10 +11,11 @@ class Image extends Model
         'model_id',
         'model_type',
         'url',
+        'preview_url',
+        'pre',
         'priority',
         'width',
         'height'
-
     ];
 
     public $timestamps = false;
