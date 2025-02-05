@@ -29,7 +29,7 @@ class CompilationController extends Controller
      */
     public function show(string $id)
     {
-        $compilation = Compilation::with(['artworks'])->findOrFail($id);
+        $compilation = Compilation::with(['artworks.artist'])->findOrFail($id);
         return $compilation;
     }
 }
