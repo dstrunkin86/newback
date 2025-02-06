@@ -14,6 +14,7 @@
 <g:image_link>{{ url($artwork->images[0]['url']) }}</g:image_link>
 <g:condition>new</g:condition>
 <g:availability>in stock</g:availability>
+<g:identifier_exists>no</g:identifier_exists>
 <g:price>{{ $artwork->price }} RUB</g:price>
 <g:brand>{{ $artwork->artist->fio->ru }}</g:brand>
 </item>
