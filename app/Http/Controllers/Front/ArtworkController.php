@@ -13,7 +13,9 @@ use App\Models\Artwork;
 use App\Models\Order;
 use App\Services\Delivery\SdekService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class ArtworkController extends Controller
 {
@@ -44,6 +46,19 @@ class ArtworkController extends Controller
         $result = $result->paginate($pageSize);
 
         return $result;
+    }
+
+    /**
+     * Display Google merchant list.
+     */
+    public function googleMerchant() {
+
+        $result = Artwork::query()->with('artist')->where('status','accepted')->where('in_sale',1)->where('price','>',0)->get();
+
+        $data['artworks'] = $result;
+
+        $content = View::make('xml.google-merchant',$data);
+        return response($content,200,)->header('Content-Type', 'application/xml');
     }
 
     /**

@@ -99,7 +99,7 @@ trait HasImages
             ->toArray();
 
         foreach ($images as $key=>$image) {
-            if (is_null($image['preview_url'])){
+            if (!isset($image['preview_url']) || is_null($image['preview_url'])){
                 $images[$key]['preview_url'] = $image['url'];
             }
         }
