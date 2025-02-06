@@ -51,7 +51,7 @@ class ArtworkController extends Controller
      */
     public function show($id)
     {
-        $artwork = Artwork::with(['artist','tags:id,type,title','compilations'])->findOrFail($id)->append('similar_paintings');
+        $artwork = Artwork::with(['artist.accepted_artworks','tags:id,type,title','compilations'])->findOrFail($id)->append('similar_paintings');
         return $artwork;
     }
 
