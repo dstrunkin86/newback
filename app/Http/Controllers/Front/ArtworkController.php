@@ -161,6 +161,7 @@ class ArtworkController extends Controller
 
         if (count($images) > 0) $artwork->updateImages($images);
 
+        $artwork->load('tags');
         $artwork->refresh();
 
         return response()->json(['artwork' => $artwork], 200);

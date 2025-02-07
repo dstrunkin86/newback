@@ -34,6 +34,7 @@ class AddArtistArtwork extends FormRequest
             'price' => 'nullable|integer|required_if:in_sale,1',
             'location' => 'nullable|array|required_if:in_sale,1',
             'images' => 'required|array',
+            'tags' => 'sometimes|array',
         ];
     }
 }
