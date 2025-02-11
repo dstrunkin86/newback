@@ -36,6 +36,20 @@ class UpdateArtistRequest extends FormRequest
             'exhibitions' => 'sometimes|array',
             'publications' => 'sometimes|array',
             'images' => 'sometimes|nullable|array',
+            'artworks' => 'sometimes|array',
+            'artworks.*.id' => 'required',
+            'artworks.*.title' => 'sometimes',
+            'artworks.*.description' => 'sometimes',
+            'artworks.*.year' => 'sometimes',
+            'artworks.*.location' => 'sometimes',
+            'artworks.*.width' => 'sometimes',
+            'artworks.*.height' => 'sometimes',
+            'artworks.*.depth' => 'sometimes',
+            'artworks.*.weight' => 'sometimes',
+            'artworks.*.price' => 'sometimes',
+            'artworks.*.tech_info' => 'sometimes',
+            'artworks.*.images' => 'sometimes|array',
+            'artworks.*.tags' => 'sometimes|array',
         ];
     }
 }
