@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\PaymentCallbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OldArthallHooksController;
 
@@ -136,5 +138,9 @@ Route::prefix('/v3')->group(function () {
         Route::get('galleries/own', [OldArthallHooksController::class, 'ownGalleries']);
 
     });
+});
+
+Route::prefix('/payment/callback')->group(function (){
+    Route::post('/yookassa', [PaymentCallbackController::class, 'yookassa']);
 });
 
