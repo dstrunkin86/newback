@@ -130,13 +130,13 @@
 
                     <el-divider></el-divider>
 
-                    <el-form-item label="Фотографии">
+                    <el-form-item label="Фотографии" v-if="editRowData.id > 0">
                         <el-upload action="" list-type="picture-card" :fileList="editRowData.images"
                             :http-request="uploadImage" :on-remove="deleteImage">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
-                    <el-divider></el-divider>
+                    <el-divider v-if="editRowData.id > 0"></el-divider>
 
                     <el-form-item label="Работы" v-if="editRowData.artworks.length > 0">
                         <el-carousel type="card" height="200px" indicator-position="none" :autoplay="false">
