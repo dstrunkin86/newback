@@ -1,15 +1,23 @@
 <template>
     <el-container>
         <el-main>
-            <div class="panel-header">Работы</div>
+            <div class="panel-header">
+                <span>Работы</span>
+                <div style="float: right;">
+                    <el-button @click="newRow()" type="success" icon="el-icon-plus">Создать</el-button>
+                </div>
+
+            </div>
+
+
             <div v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
                 class="panel-subheader">Требуют обработки</div>
             <el-table v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
                 :data="newDataRows.data" stripe>
                 <el-table-column prop="image" label="Изображение">
                     <template slot-scope="scope">
-                        <el-image style="width: 150px; height: 150px" :src="(scope.row.images.length > 0) ? scope.row.images[0].url:''"
-                            fit="cover"></el-image>
+                        <el-image style="width: 150px; height: 150px"
+                            :src="(scope.row.images.length > 0) ? scope.row.images[0].url : ''" fit="cover"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="id" label="ID" width="50">
@@ -75,8 +83,9 @@
                             <el-form-item label="Автор" style="margin-bottom: 0px;">
                                 <el-select v-model="filterFields.artist_id">
                                     <el-option label="" value=""></el-option>
-                                        <el-option v-for="item in artists" :key="item.id" :label="item.fio.ru" :value="item.id">
-                                        </el-option>
+                                    <el-option v-for="item in artists" :key="item.id" :label="item.fio.ru"
+                                        :value="item.id">
+                                    </el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -153,14 +162,19 @@
                 :title="((editRowData != null) && (editRowData.id > 0)) ? 'Редактирование' : 'Создание'"
                 :visible.sync="editDialogVisible">
                 <el-form :model="editRowData" ref="editRowData" label-width="200px" size="mini">
-                    <el-form-item label="Изображения">
+                    <el-form-item label="Изображения" v-if="editRowData.id > 0">
                         <el-upload action="" list-type="picture-card" :fileList="editRowData.images"
                             :http-request="uploadImage" :on-remove="deleteImage">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
                     <el-form-item label="Художник">
-                        <span>{{ editRowData.artist.fio.ru }}</span>
+                        <span v-if="editRowData.id > 0">{{ editRowData.artist.fio.ru }}</span>
+                        <el-select v-if="editRowData.id == undefined" v-model="editRowData.artist_id" placeholder="Выберите художника">
+                            <el-option v-for="item in artists" :key="item.id" :label="item.fio.ru"
+                                :value="item.id">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="Информация при импорте" v-if="editRowData.tech_info">
                         <div v-for="[key, value] in Object.entries(editRowData.tech_info)">{{ key }} - {{ value }}</div>
@@ -276,7 +290,7 @@ export default {
             ],
             filterFields: {
                 'status_in': ['accepted', 'rejected'],
-                'title' : '',
+                'title': '',
                 'having_tags': [],
                 'artist_id': "",
                 "in_sale": "",
@@ -349,7 +363,7 @@ export default {
                     this.tags = response[2].data;
                     this.compilations = response[3].data;
                     this.artists = response[4].data;
-                    console.log('artists',this.artists);
+                    console.log('artists', this.artists);
                     this.$loading().close();
                 }).catch((error) => {
                     this.$loading().close();
@@ -404,6 +418,41 @@ export default {
                         showClose: true,
                     });
                 });
+        },
+        newRow() {
+            this.editRowData = {
+                status: "accepted",
+                title: {
+                    ru: "",
+                    en: ""
+                },
+                description: {
+                    ru: "",
+                    en: ""
+                },
+                "year": 2019,
+                location: {
+                    fiasCode: "",
+                    postalCode: "",
+                    city: "",
+                    region: "",
+                    value: ""
+                },
+                artist_id: null,
+                width: null,
+                height: null,
+                depth: null,
+                weight: null,
+                in_sale: 0,
+                price: null,
+                tech_info: {},
+                images: [],
+                tags: [],
+                compilations: []
+            }
+
+            this.editDialogVisible = true;
+            console.log('id=', this.editRowData.id);
         },
         editRow(data, index) {
             //console.log('inFunction',data);

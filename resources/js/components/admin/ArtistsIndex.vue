@@ -1,7 +1,15 @@
 <template>
     <el-container>
         <el-main>
-            <div class="panel-header">Художники</div>
+            <div class="panel-header">
+                <span>Художники</span>
+                <div style="float: right;">
+                    <el-button @click="newRow()" type="success" icon="el-icon-plus">Создать</el-button>
+                </div>
+
+            </div>
+
+
             <div v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
                 class="panel-subheader">Требуют обработки</div>
             <el-table v-if="(typeof newDataRows.data !== 'undefined') && (newDataRows.data.length > 0)"
@@ -35,7 +43,9 @@
 
 
 
-            <div v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" class="panel-subheader">Художники в галерее</div>
+            <div v-if="(typeof dataRows.data !== 'undefined') && (dataRows.data.length > 0)" class="panel-subheader">
+                Художники в
+                галерее</div>
 
 
             <el-card class="box-card">
@@ -68,7 +78,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="3" style="padding-left:20px;">
-                                <el-button type="primary" @click="getData()">Применить</el-button>
+                            <el-button type="primary" @click="getData()">Применить</el-button>
                         </el-col>
                     </el-row>
 
@@ -120,13 +130,13 @@
 
                     <el-divider></el-divider>
 
-                    <el-form-item label="Фотографии">
+                    <el-form-item label="Фотографии" v-if="editRowData.id > 0">
                         <el-upload action="" list-type="picture-card" :fileList="editRowData.images"
                             :http-request="uploadImage" :on-remove="deleteImage">
                             <i class="el-icon-plus"></i>
                         </el-upload>
                     </el-form-item>
-                    <el-divider></el-divider>
+                    <el-divider v-if="editRowData.id > 0"></el-divider>
 
                     <el-form-item label="Работы" v-if="editRowData.artworks.length > 0">
                         <el-carousel type="card" height="200px" indicator-position="none" :autoplay="false">
@@ -356,7 +366,7 @@ export default {
             ],
             filterFields: {
                 'status_in': ['accepted', 'rejected'],
-                'fio' : '',
+                'fio': '',
                 'source': ''
             },
         };
@@ -472,6 +482,47 @@ export default {
                         showClose: true,
                     });
                 });
+        },
+        newRow() {
+            this.editRowData = {
+                source: 'arthall',
+                status: 'accepted',
+                fio: {
+                    ru: "",
+                    en: ""
+                    },
+                url: null,
+                alias: null,
+                email: '',
+                vk: '',
+                telegram: '',
+                phone: '',
+                city: {
+                    fias: '',
+                    value: '',
+                    lat: '',
+                    long: '',
+                    postIndex: ''
+                },
+                country: null,
+                creative_concept: {
+                    ru: null,
+                    en: null
+                },
+                education: null,
+                qualification: null,
+                exhibitions: null,
+                publications: null,
+                user_id: null,
+                tech_info: null,
+                external_id: null,
+                images: [],
+                artworks: [],
+                user: null,
+                tags: []
+            }
+
+            this.editDialogVisible = true;
         },
         editRow(data, index) {
             this.editRowData = data;

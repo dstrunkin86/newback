@@ -17,7 +17,7 @@ class SdekService
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.edu.cdek.ru/v2/calculator/tarifflist',
+            CURLOPT_URL => config('delivery.sdek.api_url') . '/v2/calculator/tarifflist',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -118,7 +118,7 @@ class SdekService
         }
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.edu.cdek.ru/v2/calculator/tariff',
+            CURLOPT_URL => config('delivery.sdek.api_url') . '/v2/calculator/tariff',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -242,7 +242,7 @@ class SdekService
 
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.edu.cdek.ru/v2/orders',
+            CURLOPT_URL => config('delivery.sdek.api_url') . '/v2/orders',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -281,7 +281,7 @@ class SdekService
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://api.edu.cdek.ru/v2/intakes',
+            CURLOPT_URL => config('delivery.sdek.api_url') . '/v2/intakes',
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

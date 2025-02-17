@@ -88,6 +88,12 @@ class Artwork extends Model
      */
     public function getSimilarPaintingsAttribute()
     {
-        return Artwork::where('id','<>',$this->id)->where('status','accepted')->inRandomOrder()->limit(5)->get();
+        return Artwork::query()
+            ->with('artist')
+            ->where('id','<>',$this->id)
+            ->where('status','accepted')
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
     }
 }
