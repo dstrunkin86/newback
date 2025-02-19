@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Image extends Model
 {
@@ -19,4 +20,12 @@ class Image extends Model
     ];
 
     public $timestamps = false;
+
+    /**
+     * @return MorphTo
+     */
+    public function model(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }
