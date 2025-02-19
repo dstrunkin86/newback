@@ -30,7 +30,11 @@ class ArtworkController extends Controller
 
         $sortOrder = (isset($request->sort_order)) ? $request->sort_order : 'desc';
 
-        $result = Artwork::query()->with(['artist'])->where('status','accepted')->filter($filter);
+        $result = Artwork::query()
+            ->whereHas('images')
+            ->with(['artist'])
+            ->where('status','accepted')
+            ->filter($filter);
 
         switch ($sortField) {
             case 'price':
