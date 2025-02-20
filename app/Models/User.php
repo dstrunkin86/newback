@@ -18,7 +18,7 @@ class User extends Authenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
 
-    protected $appends = ['role'];
+    protected $appends = ['role', 'stage'];
 
     /**
      * The attributes that are mass assignable.
@@ -74,4 +74,31 @@ class User extends Authenticatable
     {
         return $this->hasOne(Artist::class);
     }
+
+    /**
+     * @return int
+     */
+    public function getStageAttribute(): int
+    {
+        if (is_null($this->email) && is_null($this->passport)){
+            return 1;
+        }
+
+        if (is_null($this->artist()->first())){
+            return 2;
+        }
+
+        $artist = $this->artist()->first();
+
+        if (!$artist->creative_concept){
+            return 3;
+        }
+
+        if (!count($artist->artworks()->get())){
+            return 4;
+        }
+
+        return 5;
+    }
+
 }
