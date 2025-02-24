@@ -15,11 +15,17 @@ class PaymentCallbackController extends Controller
     {
         $data = $request->all();
 
-        Order::query()
+        $order = Order::query()
             ->where('id', $data['object']['metadata']['order_id'])
-            ->update([
+            ->first();
+
+        if ($order){
+            $order->update([
                 'status' => 'hold'
             ]);
+
+            $order->createDeliveryRequest();
+        }
 
 
         return "SUCCESS";

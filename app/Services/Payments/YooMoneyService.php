@@ -9,7 +9,6 @@ class YooMoneyService
 {
     public function getWidgetPaymentCode($order_id, $amount, $currency, $description, $customer_email, $customer_phone, )
     {
-
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -67,7 +66,6 @@ class YooMoneyService
         curl_close($curl);
 
         $response = json_decode($response);
-        //dd($response);
 
         if ($response->status == "pending") {
             return (object) [

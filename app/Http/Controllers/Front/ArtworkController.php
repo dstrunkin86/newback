@@ -12,6 +12,7 @@ use App\Http\Requests\Front\GetDeliveryOptionsRequest;
 use App\Models\Artwork;
 use App\Models\Order;
 use App\Services\Delivery\SdekService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -104,16 +105,16 @@ class ArtworkController extends Controller
     }
 
     /**
-     * Display the form to buy an artwork.
+     * @param  BuyArtworkRequest  $request
+     * @param $id
+     * @return JsonResponse
      */
     public function buy(BuyArtworkRequest $request, $id) {
         $artwork = Artwork::findOrFail($id);
-        $artist = $artwork->artist;
 
         if (($artwork->width)&&($artwork->height)&&($artwork->depth)&&($artwork->weight)&&($artwork->price)&&($artwork->location)) {
-            //создаем новый заказ
-
-            $order = Order::create([
+            $order = Order::query()->create([
+                'status' => 'new',
                 'artwork_id' => $artwork->id,
                 'artwork_price' => $artwork->price,
                 'recepient_address' => $request->recepient_address,
@@ -123,36 +124,10 @@ class ArtworkController extends Controller
                 'delivery_option' => $request->option_code
             ]);
 
-            // создаем заявку на доставку
-
-            $request = $order->createDeliveryRequest();
-
-            if (!$request->success) {
-                return response()->json([
-                    'error' => $request->reason
-                ],500);
-            }
-
-            // создаем платеж
-
-            $request = $order->createPayment();
-
-            if (!$request->success) {
-                return response()->json([
-                    'error' => $request->reason
-                ],500);
-            }
-
-            return response()->json([
-                'order_id' => $order->id,
-                'success' => true,
-                'payment_confirmation_id' => $request->payment_confirmation_id
-            ],200);
-
-        } else {
-            return response()->json(['error' => 'У работы не заданы обязательные параметры'],500);
+            return response()->json($order->createPayment());
         }
 
+        return response()->json(['error' => 'У работы не заданы обязательные параметры'],422);
     }
 
     public function addArtistArtwork(AddArtistArtwork $request)
