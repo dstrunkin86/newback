@@ -75,7 +75,7 @@ class Order extends Model
             $this->delivery_option,
             $this->recepient_contact->name,
             $this->recepient_contact->email,
-            $this->recepient_contact->name,
+            $this->recepient_contact->phone,
             $artwork->location->value,
             $this->recepient_address->value,
             $artwork->price,

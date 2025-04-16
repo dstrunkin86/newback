@@ -13,7 +13,9 @@ use App\Models\Artwork;
 use App\Models\Order;
 use App\Services\Delivery\SdekService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class ArtworkController extends Controller
 {
@@ -28,7 +30,11 @@ class ArtworkController extends Controller
 
         $sortOrder = (isset($request->sort_order)) ? $request->sort_order : 'desc';
 
-        $result = Artwork::query()->with(['artist'])->where('status','accepted')->filter($filter);
+        $result = Artwork::query()
+            ->whereHas('images')
+            ->with(['artist'])
+            ->where('status','accepted')
+            ->filter($filter);
 
         switch ($sortField) {
             case 'price':
@@ -47,11 +53,24 @@ class ArtworkController extends Controller
     }
 
     /**
+     * Display Google merchant list.
+     */
+    public function googleMerchant() {
+
+        $result = Artwork::query()->with('artist')->where('status','accepted')->where('in_sale',1)->where('price','>',0)->get();
+
+        $data['artworks'] = $result;
+
+        $content = View::make('xml.google-merchant',$data);
+        return response($content,200,)->header('Content-Type', 'application/xml');
+    }
+
+    /**
      * Display the specified artist.
      */
     public function show($id)
     {
-        $artwork = Artwork::with(['artist','tags:id,type,title','compilations'])->findOrFail($id)->append('similar_paintings');
+        $artwork = Artwork::with(['artist.accepted_artworks','tags:id,type,title','compilations'])->findOrFail($id)->append('similar_paintings');
         return $artwork;
     }
 
@@ -161,6 +180,7 @@ class ArtworkController extends Controller
 
         if (count($images) > 0) $artwork->updateImages($images);
 
+        $artwork->load('tags');
         $artwork->refresh();
 
         return response()->json(['artwork' => $artwork], 200);

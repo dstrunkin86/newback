@@ -49,7 +49,7 @@ class UsersController extends Controller
     {
         $user = $request->user();
 
-        $user->load(['artist', 'artist.artworks', 'artist.tags']);
+        $user->load(['artist', 'artist.artworks.tags', 'artist.tags']);
 
         return response()->json(['user' => $user], 200);
     }

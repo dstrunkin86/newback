@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\PaymentCallbackController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OldArthallHooksController;
 
@@ -47,6 +49,7 @@ Route::middleware([AfterUserRequest::class, ForceJsonResponse::class])->group(fu
     Route::get('/posts', [FrontPostController::class, 'index']);
     Route::get('/posts/{id}', [FrontPostController::class, 'show']);
 
+    Route::get('/artworks/google-merchant', [FrontArtworkController::class, 'googleMerchant'])->withoutMiddleware([AfterUserRequest::class, ForceJsonResponse::class]);;
     Route::get('/artworks', [FrontArtworkController::class, 'index']);
     Route::middleware('auth:sanctum')->post('/artworks/{id}/buy', [FrontArtworkController::class, 'buy']);
     Route::middleware('auth:sanctum')->post('/artworks/{id}/delivery-cost', [FrontArtworkController::class, 'getDeliveryCost']);
@@ -135,5 +138,9 @@ Route::prefix('/v3')->group(function () {
         Route::get('galleries/own', [OldArthallHooksController::class, 'ownGalleries']);
 
     });
+});
+
+Route::prefix('/payment/callback')->group(function (){
+    Route::post('/yookassa', [PaymentCallbackController::class, 'yookassa']);
 });
 

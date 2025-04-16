@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
@@ -88,6 +89,20 @@ class Artwork extends Model
      */
     public function getSimilarPaintingsAttribute()
     {
-        return Artwork::where('id','<>',$this->id)->where('status','accepted')->inRandomOrder()->limit(5)->get();
+        return Artwork::query()
+            ->with('artist')
+            ->where('id','<>',$this->id)
+            ->where('status','accepted')
+            ->inRandomOrder()
+            ->limit(5)
+            ->get();
+    }
+
+    /**
+     * @return MorphMany
+     */
+    public function images():MorphMany
+    {
+        return $this->morphMany(Image::class, 'model');
     }
 }

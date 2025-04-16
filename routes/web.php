@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ArtworkController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Front\ArtworkController as FrontArtworkController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

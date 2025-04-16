@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Models\Synergy\ArtistWorks;
 use Illuminate\Http\Request;
 use App\Filters\ArtistFilter;
 use App\Models\Artist;
@@ -147,7 +148,29 @@ class ArtistController extends Controller
 
         if (count($images) > 0) $artist->updateImages($images);
 
+        foreach ($data['artworks'] ?? [] as $artwork){
+            $work = $artist
+                ->artworks()
+                ->where('id', $artwork['id'])
+                ->first();
+
+            if (is_null($work)){
+                continue;
+            }
+
+            $work->update($artwork);
+
+            if (array_key_exists('images', $artwork)){
+                $work->updateImages($artwork['images']);
+            }
+
+            if (array_key_exists('tags', $artwork)){
+                $work->tags()->sync($artwork['tags']);
+            }
+        }
+
         $artist->refresh();
+        $artist->load('artworks.tags');
 
         return response()->json(['artist' => $artist], 200);
     }
