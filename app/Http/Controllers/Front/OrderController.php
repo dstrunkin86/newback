@@ -83,7 +83,24 @@ class OrderController extends Controller
             );
         }
 
-        return (new SdekService)->callCourier($request->delivery_date, $request->delivery_time_from, $request->delivery_time_to, $order->delivery_id, $order->artwork->artist->fio->ru, $order->artwork->artist->phone, $order->artwork->location->value, $request->courier_comment);
+        $response = (new SdekService)
+            ->callCourier(
+                $request->delivery_date,
+                $request->delivery_time_from,
+                $request->delivery_time_to,
+                $order->delivery_id,
+                $order->artwork->artist->fio->ru,
+                $order->artwork->artist->phone,
+                $order->artwork->location->value,
+                $request->courier_comment);
+
+        if ($response->success){
+            $order->update([
+                'status' => 'courier',
+            ]);
+        }
+
+        return $response;
 
     }
 
@@ -134,7 +151,10 @@ class OrderController extends Controller
             );
         }
 
-        $order->update(['status'=>'accepted_by_artist']);
+        $order->update([
+            'status'=>'accepted_by_artist'
+        ]);
+
         $order->refresh();
 
         return response()->json($order,200);

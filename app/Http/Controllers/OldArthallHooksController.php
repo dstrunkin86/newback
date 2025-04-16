@@ -16,9 +16,16 @@ class OldArthallHooksController extends Controller
         return trim($string, '-');
     }
 
-    public function emptyArray()
+    /**
+     * @param  Request  $request
+     * @return array
+     */
+    public function emptyArray(Request $request)
     {
-        return [];
+        return [
+            'synergy_paintings' => [],
+            'paintings' => $this->artworksList($request)
+        ];
     }
 
 
